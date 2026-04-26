@@ -32,5 +32,6 @@ Throughout my studies, the projects have covered a wide range of fields and tech
 
 ## 📜 License
 The code and materials in this repository are released under the **MIT** license, unless otherwise specified in individual projects.
+
 ---
 *Created with dedication (and lots of coffee ☕) during my academic years at University of Bergamo.*
