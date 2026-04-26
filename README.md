@@ -18,7 +18,7 @@ The repository is chronologically divided by academic year:
 
 ### 📙 Master's Degree (Laurea Magistrale)
 - 📁 [**4_anno/**](./4_anno)
-- 📁 [**5_anno/**](*coming soon*)
+- 📁 **5_anno/** (*coming soon*)
 
 > **Note:** Each subfolder related to a specific course contains its own `README.md` with details on the technologies used, project specifications, and setup instructions.
 
