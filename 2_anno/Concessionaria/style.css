@@ -1,0 +1,49 @@
+.background{
+    background-color:#303030;
+}
+
+table.altriUtenti {
+    border-collapse: collapse;
+    width: 60%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #828282;
+}
+
+td.inferiore{
+    background-color: #F3B2AF;
+}
+
+td.superiore{
+    background-color: #77DD77;
+}
+ 
+.container {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.bottom-margin {
+    margin-bottom: 25px;
+}
+
+.top-margin {
+    margin-top: 25px;
+}
+
+#search {
+    color: white;
+    background-color: #303030;
+    border: 2px solid hsl(0, 0%, 22%);
+    padding: 2px;
+}
+.bordo {
+    border-width: 3px !important;
+}
+
+.bg {
+    background-color: #595959;
+}

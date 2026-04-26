@@ -1,0 +1,2958 @@
+/**
+ * assets/css/style.css
+ * Foglio di stile principale per Quiz Online
+ */
+
+/* Variabili Globali dei Colori e Font */
+:root {
+  /* Palette principale originale */
+  --main-color: #556b2f;
+  --rgb-main-color: 85, 107, 47;
+  --light-color: #8aa652;
+  --dark-color: #3a4d20;
+  --accent-color: #d4ba6a;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --background-light: #f5f5f5; /* Sfondo generale body */
+  --background-medium: #e0e0e0; /* Sfondo per elementi intermedi come sidebar */
+  --background-card: #ffffff; /* Sfondo per card, content area, etc. */
+
+  /* Palette alternativa/complementare (es. per UI moderna) */
+  --primary-blue: #0050a5;
+  --light-blue: #0095da;
+  --primary-blue-dark: #0056b3;
+  --secondary-gray: #6c757d;
+  --light-gray-bg: #f8f9fa; /* Sfondi molto chiari, es. header tabella */
+  --border-color: #dee2e6; /* Colore bordi standard */
+  --text-muted: #6c757d; /* Testo secondario o meno importante */
+
+  /* AGGIUNGI QUESTE VARIABILI PER I COLORI DEI PUNTEGGI */
+  --score-high-color: #28a745; /* Verde per punteggio alto (success) */
+  --score-medium-color: #ffa44f; /* Arancio per punteggio medio (warning) */
+  --score-low-color: #dc3545; /* Rosso per punteggio basso (danger) */
+}
+
+/* Reset di Base e Stili Globali del Body */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif; /* Considerare: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; */
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Assicura che il footer stia in fondo */
+}
+
+/* Contenitore Principale per limitare la larghezza del contenuto */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Larghezza massima del layout */
+  margin: 0 auto; /* Centra il container */
+  padding: 0 15px; /* Spazio laterale */
+}
+
+.main-content-page-padding {
+  /* rinominata da .main-content-area per chiarezza */
+  padding-top: 30px; /* Spazio sopra il titolo */
+  padding-bottom: 50px; /* Spazio sotto la paginazione */
+}
+
+/* Se hai già stili per header di pagina, integra questi. Altrimenti, crea una nuova sezione. */
+.page-header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px; /* Aumentato */
+  padding-bottom: 20px; /* Aumentato */
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.page-title-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-title-icon {
+  font-size: 1.8rem; /* O 2rem */
+  color: var(--main-color);
+}
+
+/* MODIFICA: Applica a h1 e h2 per flessibilità */
+h1.page-main-title,
+h2.page-main-title {
+  font-size: 1.8rem; /* O 2rem */
+  color: var(--dark-color);
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.total-count-badge {
+  font-size: 0.85em;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 12px;
+  background-color: var(--light-gray-bg);
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.per-page-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.per-page-label {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- Header e Navigazione Principale --- */
+header {
+  background-color: var(--main-color);
+  color: var(--text-light);
+  padding: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  /* Contenuto interno all'header, all'interno di un .container */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header-logo {
+  height: 80px; /* Modifica questo valore! */
+  width: auto;
+  display: block;
+}
+
+.container.header-content {
+  display: flex;
+  justify-content: space-between; /* Spazio tra logo e info utente */
+  align-items: center; /* Allinea verticalmente logo e info utente */
+  max-width: 1200px; /* O la larghezza massima del tuo layout */
+  margin: 0 auto; /* Centra il contenuto dell'header */
+  padding: 0 15px; /* Padding laterale per non attaccare ai bordi */
+}
+
+/* Stili per migliorare i link di Login/Registrazione nell'Header */
+
+.user-info {
+  /* display: flex; align-items: center; sono già lì, va bene */
+  gap: 10px; /* Spazio tra il testo di benvenuto e i bottoni, o tra i bottoni stessi */
+}
+
+.user-info .user-welcome-text {
+  color: var(--text-light); /* Assicura che il testo di benvenuto sia bianco */
+  font-weight: 500; /* Un po' più di spessore */
+}
+
+/* Stile base per i bottoni di autenticazione nell'header */
+.user-info .btn-header-auth {
+  padding: 8px 16px; /* Spazio interno al bottone (sopra/sotto, destra/sinistra) */
+  color: var(--text-light); /* Colore del testo del bottone */
+  text-decoration: none; /* Rimuove la sottolineatura del link */
+  border-radius: 5px; /* Angoli del bottone leggermente arrotondati */
+  font-weight: 500; /* Testo del bottone un po' in grassetto */
+  border: 1px solid var(--text-light); /* Bordo bianco sottile */
+  background-color: transparent; /* Sfondo trasparente di base */
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease; /* Animazione fluida al passaggio del mouse */
+  display: inline-block; /* Comportamento corretto per padding e margini */
+}
+
+.user-info .btn-header-auth:hover {
+  background-color: var(
+    --text-light
+  ); /* Sfondo diventa bianco quando ci passi sopra col mouse */
+  color: var(
+    --main-color
+  ); /* Testo del bottone diventa del colore principale (es. verde scuro) */
+  transform: translateY(-1px); /* Leggero sollevamento del bottone */
+}
+
+/* Stile specifico per il bottone "Registrati" (per farlo risaltare un po' di più) */
+.user-info .btn-header-register {
+  background-color: var(
+    --accent-color
+  ); /* Sfondo usa il colore d'accento (es. il tuo giallo/oro) */
+  border-color: var(--accent-color); /* Bordo dello stesso colore */
+  color: var(
+    --text-dark
+  ); /* Testo scuro per una buona leggibilità su sfondo chiaro/accentato */
+}
+
+.user-info .btn-header-register:hover {
+  background-color: #c0a756; /* Un colore d'accento leggermente più scuro per l'hover */
+  border-color: #c0a756;
+  color: var(--text-dark); /* Mantiene il testo scuro */
+}
+
+/* Stile specifico per il bottone "Logout" (per dargli un tocco diverso, es. più tenue) */
+.user-info .btn-header-logout {
+  border-color: #ffa7a7; /* Un bordo rosso/rosa chiaro */
+  color: #ffd1d1; /* Testo rosso/rosa chiaro */
+}
+
+.user-info .btn-header-logout:hover {
+  background-color: #e74c3c; /* Sfondo rosso più deciso all'hover */
+  border-color: #e74c3c;
+  color: var(--text-light); /* Testo bianco */
+}
+
+nav {
+  /* Barra di navigazione principale sotto l'header */
+  background-color: var(--dark-color);
+  padding: 10px 0;
+}
+nav ul {
+  /* Lista nella nav bar, all'interno di un .container */
+  list-style: none;
+  display: flex;
+}
+nav ul li a {
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+}
+nav ul li a:hover {
+  background-color: var(--main-color);
+}
+
+/* --- Struttura Layout: Main Content, Sidebar, Content Area --- */
+.main-content {
+  /* Contenitore per sidebar e area contenuto principale */
+  display: block;
+  gap: 25px; /* Spazio tra sidebar e content */
+  max-width: 1200px; /* Coerente con .container */
+  margin: 20px auto; /* Centra e aggiunge spazio verticale */
+  padding: 0 15px; /* Spazio laterale */
+  flex: 1; /* Occupa lo spazio rimanente in altezza */
+}
+
+/* SPECIFICO PER INDEX.PHP (o pagine con layout sidebar + content) */
+body.page-index .main-content {
+  display: flex; /* Sovrascrive display:block per abilitare la sidebar */
+  gap: 25px; /* Spazio tra sidebar e content */
+}
+
+body.page-index .sidebar {
+  flex: 0 0 280px; /* Larghezza fissa della sidebar SOLO per page-index */
+}
+
+.content {
+  /* Area principale del contenuto */
+  background-color: var(
+    --background-card
+  ); /* Sfondo di default per l'area content */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  /* flex: 1; -- Rimosso da qui, sarà specifico per page-index */
+}
+body.page-index .content {
+  flex: 1; /* Occupa lo spazio rimanente SOLO per page-index */
+}
+.content h1 {
+  /* Titolo principale dell'area content */
+  color: var(--dark-color);
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+/* --- Elementi di Form Comuni --- */
+form {
+  margin-bottom: 20px;
+}
+.form-group {
+  margin-bottom: 15px;
+} /* Raggruppamento di label e input */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.bold {
+  font-weight: bold;
+} /* Classe utility */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+textarea,
+select {
+  /* Stili base per campi input e select */
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+  /* Stili al focus */
+  border-color: var(--primary-blue); /* O var(--main-color) */
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Sfumatura al focus */
+}
+textarea {
+  min-height: 100px;
+} /* Altezza minima per textarea */
+
+/* --- Bottoni --- */
+button,
+.btn {
+  /* Stile base per bottoni e link .btn */
+  padding: 10px 18px;
+  background-color: var(--main-color);
+  color: var(--text-light);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  text-decoration: none !important;
+}
+button:hover,
+.btn:hover {
+  background-color: var(--dark-color);
+  transform: translateY(-1px); /* Leggero effetto al hover */
+}
+
+.btn-secondary {
+  /* Bottone per azioni secondarie */
+  background-color: var(--secondary-gray);
+  color: var(--text-light) !important; /* Assicura testo bianco */
+}
+.btn-secondary:hover {
+  background-color: #545b62;
+} /* Grigio più scuro all'hover */
+
+/* --- Elementi Card --- */
+.card {
+  /* Stile base per elementi "card" */
+  background-color: var(--background-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.card-title {
+  /* Titolo generico dentro una card */
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  color: var(--dark-color);
+  font-weight: 600;
+}
+.card-content {
+  color: var(--text-dark);
+}
+
+/* --- Tabelle --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+table th,
+table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+table th {
+  background-color: var(--light-gray-bg);
+  color: var(--text-dark);
+  font-weight: 600;
+}
+table tr:nth-child(even) td {
+  background-color: #fdfdfd;
+} /* Zebra striping leggero */
+table tr:hover td {
+  background-color: #f5f5f5;
+} /* Hover sulle righe */
+
+/* --- Componenti Specifici dell'Applicazione --- */
+
+/* Filtro di Ricerca nella Sidebar */
+.search-filter {
+  background-color: var(--background-card);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+.search-filter h3 {
+  color: var(--dark-color);
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  display: flex; /* Per allineare icona se presente */
+  align-items: center;
+}
+.search-filter h3 i {
+  margin-right: 8px;
+  color: var(--main-color);
+} /* Icona nel titolo del filtro */
+
+.search-form-sidebar .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.search-form-sidebar .form-group label {
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+.search-form-sidebar .form-group input[type="text"],
+.search-form-sidebar .form-group input[type="date"],
+.search-form-sidebar .form-group select {
+  padding: 0.7rem; /* Input specifici per form sidebar */
+}
+
+.search-form-sidebar .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 5px;
+}
+.search-form-sidebar .checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--main-color);
+  margin-right: 5px;
+}
+.search-form-sidebar .checkbox-group label {
+  font-weight: normal;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.search-form-sidebar .form-actions-sidebar {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.search-form-sidebar .form-actions-sidebar .btn,
+.search-form-sidebar .form-actions-sidebar .btn-secondary {
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem 0;
+}
+
+/* Lista dei Quiz (Griglia di Card) */
+.quiz-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Griglia responsiva */
+  gap: 25px;
+  margin-top: 20px;
+}
+.quiz-item {
+  /* Singola card di un quiz, eredita da .card */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Spinge le azioni in fondo */
+  width: 100%;
+}
+.quiz-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-title {
+  /* Titolo dentro .quiz-item */
+  margin-top: 0;
+  color: var(--dark-color);
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.quiz-meta {
+  /* Informazioni meta del quiz */
+  padding: 5px 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+.quiz-meta p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+}
+.quiz-meta p i {
+  margin-right: 8px;
+  color: var(--secondary-gray);
+  width: 16px;
+}
+.quiz-meta strong {
+  color: var(--text-dark);
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 10px; /* Spazio di default TRA i bottoni */
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+/*
+   BOTTONI IN INDEX.PHP (lista principale dei quiz, di solito 2 bottoni: Visualizza, Partecipa)
+   Questi bottoni si espandono per riempire lo spazio.
+   Usiamo un selettore che NON includa la classe .quiz-actions-my-list
+*/
+.quiz-list .quiz-item .quiz-actions:not(.quiz-actions-my-list) .btn {
+  flex-grow: 1; /* FA ESPANDERE I BOTTONI */
+  flex-basis: 0;
+  padding: 8px 12px; /* Padding per i bottoni di index.php */
+  font-size: 0.85rem;
+}
+
+.quiz-list .quiz-item .quiz-actions:not(.quiz-actions-my-list) .btn i.fas {
+  margin-right: 8px; /* Spazio icona-testo per i bottoni di index.php */
+  font-size: 0.9em;
+}
+
+/*
+   BOTTONI IN QUIZ_MY.PHP (lista "I Miei Quiz", 4 bottoni: Info, Visualizza, Modifica, Elimina)
+   Questi bottoni devono essere più piccoli e non espandersi troppo.
+   Hanno la classe .quiz-actions-my-list sul contenitore e .btn-sm sui bottoni.
+*/
+.quiz-actions-manage {
+  gap: 8px; /* Spazio TRA i quattro bottoni - puoi regolarlo */
+  flex-wrap: wrap; /* Permette ai bottoni di andare a capo se necessario */
+  justify-content: flex-start; /* Allinea i bottoni all'inizio (sinistra) se non occupano tutto lo spazio */
+}
+
+.quiz-actions-manage .btn {
+  flex-grow: 1; /* Allows buttons to grow and share available space */
+  flex-shrink: 1; /* Allows buttons to shrink if there's not enough space (less critical here) */
+  flex-basis: calc(
+    50% - 4px
+  ); /* (50% of container width) - (half of the 'gap' value) */
+  /* 4px is half of the 8px gap. */
+
+  box-sizing: border-box; /* IMPORTANT: Ensures padding and border are included in the
+                               button's total width, not added on top of the percentage. */
+}
+
+/* Stile per bottoni più piccoli (.btn-sm) */
+.btn-sm {
+  padding: 7px 12px !important; /* Aumentato padding verticale e orizzontale */
+  font-size: 0.825rem !important; /* Aumentato leggermente il font size (circa 13.2px se 1rem=16px) */
+  line-height: 1.5 !important; /* Aumentata line-height per migliore respiro verticale */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: nowrap; /* Mantenuto per evitare che il testo INTERNO al bottone vada a capo */
+}
+
+.btn-sm i.fas {
+  margin-right: 6px !important; /* Leggermente più spazio tra icona e testo */
+  font-size: 0.9em !important; /* Dimensione icona relativa al font-size del bottone, va bene */
+}
+
+/* Badge di Stato (Disponibile, In Attesa, Scaduto) */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 15px; /* Forma a pillola */
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-top: 5px;
+}
+.status-badge i {
+  margin-right: 5px;
+  font-size: 0.9em;
+}
+.status-badge.available {
+  background-color: #e6f7ee;
+  color: #27ae60;
+  border: 1px solid #b7e4c7;
+}
+.status-badge.pending {
+  background-color: #fff8e1;
+  color: #f39c12;
+  border: 1px solid #ffe082;
+}
+.status-badge.expired {
+  background-color: #ffebee;
+  color: #e74c3c;
+  border: 1px solid #ffcdd2;
+}
+
+/* Card di Benvenuto e Link nel Testo */
+.welcome-card {
+  background-color: #eef6ff !important; /* Azzurrino */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-left: 5px solid var(--primary-blue) !important; /* O var(--main-color) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.welcome-card .card-content p {
+  line-height: 1.6;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+.welcome-card .card-content p:last-child {
+  margin-bottom: 0;
+}
+
+.text-link {
+  /* Link generico nel testo */
+  color: var(--primary-blue); /* O var(--main-color) */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.text-link:hover {
+  color: var(--primary-blue-dark);
+  text-decoration: underline;
+}
+
+/* Messaggio "Nessun Risultato" */
+.no-results {
+  background-color: var(--background-card);
+  border-radius: 8px;
+  padding: 25px 20px;
+  margin: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color); /* Bordo per distinguere */
+}
+.no-results i {
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+.no-results p {
+  margin-bottom: 10px;
+}
+
+/* --- Header dei Risultati (sopra la lista quiz, con filtri per pagina/ordinamento) --- */
+.results-header {
+  background-color: var(--background-card);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Va a capo su schermi piccoli */
+  gap: 15px;
+}
+.results-header h2 {
+  /* Titolo "Quiz Disponibili" o "Risultati Ricerca" */
+  color: var(--text-dark);
+  font-size: 1.3rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.results-header h2 i {
+  margin-right: 10px;
+  font-size: 1.1em;
+  color: var(--main-color);
+}
+.results-header h2 small {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+.results-header .controls-container {
+  /* Contenitore per i form select */
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.results-header form {
+  margin: 0;
+  display: flex;
+  align-items: center;
+} /* Form per select */
+.results-header label {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 500;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+.results-header label i {
+  margin-right: 4px;
+}
+.results-header select {
+  /* Stile per i select */
+  padding: 8px 12px;
+  background-color: white; /* Eredita da stili input globali ma specificato per chiarezza */
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  min-width: 70px; /* Larghezza minima per "Elementi:" */
+}
+.results-header select#sort_by_inline {
+  min-width: 180px;
+} /* Larghezza minima per "Ordina:" */
+
+/* --- Paginazione (Stile Unificato e Pulito) --- */
+.pagination {
+  /* Contenitore principale della paginazione, può essere <nav> */
+  margin-top: 30px;
+  background-color: var(--background-card);
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+.pagination-wrapper {
+  /* Struttura interna per info e controlli */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.pagination-info {
+  /* Testo "Visualizzazione X-Y di Z" */
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pagination-info i {
+  color: var(--main-color);
+  font-size: 1.1em;
+}
+
+.pagination-controls {
+  /* Contenitore per i link di pagina effettivi */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Allinea i bottoni a destra */
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+.compact-pagination {
+  /* Contenitore diretto dei .page-item */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* O flex-end se preferisci allineati a destra */
+  flex-wrap: wrap;
+  gap: 6px; /* Spazio tra i bottoni/numeri */
+}
+
+.page-item {
+  /* Singolo elemento: numero, Prec, Succ */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color);
+  color: var(--primary-blue); /* O var(--main-color) */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+}
+.page-nav {
+  padding: 0 12px;
+} /* Più padding per Prec/Succ con testo */
+.page-nav i {
+  font-size: 0.85em;
+  transition: transform 0.2s ease;
+}
+.page-nav:hover:not(.disabled) i.fa-chevron-left {
+  transform: translateX(-3px);
+}
+.page-nav:hover:not(.disabled) i.fa-chevron-right {
+  transform: translateX(3px);
+}
+
+.page-item:hover:not(.active):not(.disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: var(--primary-blue-dark); /* O var(--dark-color) */
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+.page-item.active {
+  background-color: var(--primary-blue); /* O var(--main-color) */
+  border-color: var(--primary-blue); /* O var(--main-color) */
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 123, 255, 0.3);
+  cursor: default;
+  pointer-events: none;
+}
+.page-item.disabled {
+  background-color: var(--light-gray-bg);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.65;
+  pointer-events: none;
+}
+.page-dots {
+  /* Puntini di sospensione "..." */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  font-weight: bold;
+  color: var(--text-muted);
+  border: 1px solid transparent; /* Per allineamento verticale */
+  cursor: default;
+}
+
+/* --- Modale per Conferma Eliminazione --- */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding-top: 60px;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 25px;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+.close-button {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+}
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+.modal-content p {
+  margin-bottom: 20px;
+}
+.modal-actions {
+  text-align: right;
+  margin-top: 20px;
+}
+.modal-actions .btn {
+  margin-left: 10px;
+}
+.modal-actions .btn:first-child {
+  margin-left: 0;
+}
+
+/* --- Stili per Pagina Creazione/Modifica Quiz --- */
+.question-block {
+  /* Contenitore per una singola domanda e le sue risposte */
+  margin-bottom: 25px;
+  padding: 20px;
+  border: 1px solid #d1d8c7; /* Bordo in tema verde originale */
+  border-radius: 8px;
+  background-color: #f7f8f2; /* Sfondo verde molto chiaro */
+  position: relative;
+}
+.question-block h2,
+.question-block h3 {
+  /* Titoli interni al blocco domanda */
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: var(--dark-color);
+}
+.answer-block {
+  /* Contenitore per una singola risposta */
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #e6e0d1; /* Bordo in tema accento originale */
+  border-radius: 6px;
+  background-color: #fdfaf3; /* Sfondo accento molto chiaro */
+  position: relative;
+}
+.answer-block:first-of-type {
+  margin-top: 0;
+}
+
+.remove-answer-btn,
+.remove-question-btn {
+  /* Bottoni di rimozione specifici */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.remove-answer-btn {
+  /* Bottone per rimuovere singola risposta */
+  background-color: #e74c3c; /* Rosso */
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.remove-answer-btn:hover {
+  background-color: #c0392b;
+}
+.remove-question-btn {
+  /* Bottone per rimuovere intera domanda */
+  display: block;
+  margin-top: 15px;
+  background-color: #c0392b; /* Rosso più scuro */
+  padding: 8px 15px; /* Padding da .btn */
+}
+.remove-question-btn:hover {
+  background-color: #a52f22;
+}
+
+.textarea {
+  /* Se usi una classe custom per textarea specifiche */
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* --- Messaggi di Alert (Successo, Errore, etc.) --- */
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px; /* Spazio sotto l'alert */
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+
+  /* --- AGGIUNTE PER CENTRARE E DISTANZIARE --- */
+  max-width: 720px; /* Larghezza massima dell'alert, aggiustala se necessario */
+  margin-left: auto; /* Centra l'alert orizzontalmente */
+  margin-right: auto; /* Centra l'alert orizzontalmente */
+  margin-top: 20px; /* Spazio sopra l'alert */
+  /* Se vuoi che l'alert sia sempre fisso in alto, indipendentemente dallo scroll, 
+       e il contenitore #alert-container-page non è fisso, allora
+       potresti considerare di stilizzare il #alert-container-page o il .custom-alert-fallback-container
+       con position: fixed. Ma se #alert-container-page è nel flusso normale
+       del documento, queste proprietà su .alert sono sufficienti per centrarlo
+       al suo interno. */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra leggera opzionale per risalto */
+}
+
+.alert i {
+  /* Icona nell'alert */
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* Pulsante di chiusura - Se la tua funzione showAlert aggiunge un pulsante di chiusura */
+/* Se la tua funzione showAlert usa le classi .custom-alert-close, usa quelle. 
+   Altrimenti, se il pulsante di chiusura ha una classe generica come .alert-close, usa quella.
+   Assumiamo che la tua funzione showAlert possa usare una struttura simile a quella discussa in precedenza
+   o che tu possa aggiungere un pulsante di chiusura con una classe specifica.
+*/
+.alert .alert-close-btn {
+  /* Sostituisci .alert-close-btn con la classe effettiva del tuo pulsante di chiusura se ne hai uno */
+  margin-left: auto; /* Spinge il pulsante di chiusura all'estrema destra */
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+}
+.alert .alert-close-btn:hover {
+  opacity: 0.9;
+}
+
+/* Mantieni i tuoi stili specifici per tipo di alert */
+.alert-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-color: #badbcc;
+}
+.alert-success i {
+  color: #0f5132;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #842029;
+  border-color: #f5c2c7;
+}
+.alert-danger i {
+  color: #842029;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #664d03;
+  border-color: #ffecb5;
+}
+.alert-warning i {
+  color: #664d03;
+}
+
+.alert-info {
+  background-color: #cff4fc;
+  color: #055160;
+  border-color: #b6effb;
+}
+.alert-info i {
+  color: #055160;
+}
+
+/* --- Footer --- */
+footer {
+  background-color: var(--main-color);
+  color: var(--text-light);
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto; /* Spinge il footer in fondo */
+  font-size: 0.9rem;
+}
+
+/* --- Media Queries per Responsività --- */
+@media (max-width: 992px) {
+  /* Tablet */
+  .main-content {
+    gap: 20px;
+  }
+  .sidebar {
+    flex: 0 0 240px;
+  }
+  .quiz-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .pagination-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .pagination-info,
+  .pagination-controls {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile Large */
+  .header-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  nav ul li a {
+    text-align: center;
+  }
+
+  .main-content {
+    flex-direction: column;
+    padding: 0 10px;
+    margin-top: 15px;
+  }
+  .sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+    flex-basis: auto;
+  }
+  .content {
+    margin-left: 0;
+    padding: 15px;
+  }
+  .quiz-list {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .results-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .results-header h2 {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  .results-header .controls-container {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .results-header form {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .results-header label {
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  .results-header select {
+    width: 100%;
+  }
+
+  .pagination-controls .compact-pagination {
+    justify-content: center;
+    gap: 4px;
+  }
+  .page-item {
+    min-width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+    padding: 0 8px;
+  }
+  .page-nav {
+    padding: 0 10px;
+  }
+  .page-dots {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile Small */
+  .content h1 {
+    font-size: 1.5rem;
+  }
+  .quiz-title {
+    font-size: 1.1rem;
+  }
+  .card {
+    padding: 15px;
+  }
+  .page-item.optional {
+    display: none;
+  } /* Se usi la classe 'optional' in PHP per nascondere numeri */
+  .pagination-info {
+    font-size: 0.8rem;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  .modal-content h2 {
+    font-size: 1.2rem;
+  }
+}
+/* --- Stili per Pagina Dettaglio Quiz (breadcrumb, info, etc.) --- */
+/* (Questi sono gli stili che avevi alla fine del file PHP, adattati) */
+
+.breadcrumb-nav {
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.breadcrumb-link {
+  color: var(--primary-blue); /* O var(--main-color) */
+  text-decoration: none;
+}
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+.breadcrumb-separator {
+  margin: 0 8px;
+}
+.breadcrumb-current {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.quiz-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+.quiz-detail-header h1 {
+  font-size: 2rem; /* Più grande */
+  color: var(--dark-color);
+  margin: 0; /* Rimuovi margine di default */
+}
+/* .status-badge è già definito bene, assicurati che i colori di sfondo siano quelli che preferisci */
+.status-badge.available {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+}
+.status-badge.pending {
+  background-color: #f39c12;
+  color: white;
+  border: none;
+}
+.status-badge.expired {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.quiz-detail-card {
+  /* Simile a .card ma forse con stile leggermente diverso */
+  background-color: var(--background-card);
+  border-radius: 8px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); No shadow, è dentro .content */
+  padding: 20px;
+  margin-bottom: 30px;
+  border: 1px solid var(--border-color);
+}
+
+.quiz-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive */
+  gap: 20px 30px; /* row-gap column-gap */
+}
+
+.quiz-info-item {
+  display: flex;
+  align-items: flex-start; /* Allinea icona in alto se testo va a capo */
+  gap: 12px; /* Spazio tra icona e testo */
+}
+.quiz-info-item i {
+  font-size: 1.1rem;
+  color: var(--main-color); /* O var(--primary-blue) */
+  margin-top: 3px; /* Allineamento fine icona */
+  width: 20px; /* Larghezza fissa per allineamento */
+  text-align: center;
+}
+.quiz-info-item .info-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+  text-transform: uppercase; /* Opzionale: per un look più formale */
+}
+.quiz-info-item .info-value {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+.quiz-info-item.quiz-description {
+  /* Per farla occupare tutta la larghezza se necessario */
+  grid-column: 1 / -1;
+}
+
+.quiz-action-container {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+.btn-participate {
+  /* Eredita da .btn ma con personalizzazioni */
+  background-color: var(--primary-blue); /* Colore primario moderno */
+  background-color: #459cff;
+  padding: 12px 25px; /* Padding generoso */
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 25px; /* Pill shape */
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: inline-flex; /* Per allineare icona */
+  align-items: center;
+  gap: 8px;
+}
+.btn-participate:hover {
+  background-color: var(--primary-blue-dark);
+  transform: translateY(-2px);
+}
+
+.login-prompt p,
+.expired-notice p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.login-prompt p i,
+.expired-notice p i {
+  color: var(--secondary-gray);
+  font-size: 1.1em;
+}
+
+/* --- Quiz Detail Page - Questions Preview (NUOVI STILI) --- */
+.questions-preview-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  /* border-top: 1px solid var(--border-color); Già in quiz-action-container, se presente */
+}
+
+.questions-preview-section h2 {
+  font-size: 1.6rem; /* Coerente con .content h1 */
+  color: var(--dark-color);
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+}
+.questions-preview-section h2 i {
+  margin-right: 12px;
+  color: var(--main-color);
+  font-size: 1.1em;
+}
+
+.no-questions-notice {
+  /* Stile simile a .no-results ma specifico */
+  background-color: var(
+    --background-card
+  ); /* O var(--light-gray-bg) per meno enfasi */
+  border-radius: 8px;
+  padding: 25px 20px;
+  margin: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+}
+.no-questions-notice i {
+  display: block; /* Icona su riga separata */
+  font-size: 1.8em; /* Icona più grande */
+  margin-bottom: 10px;
+  color: var(--secondary-gray);
+}
+.no-questions-notice p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+.question-card {
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px; /* Angoli arrotondati consistenti */
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease;
+  overflow: hidden; /* Per contenere l'animazione del contenuto */
+}
+
+.question-card:last-child {
+  margin-bottom: 0;
+}
+
+.question-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  user-select: none; /* Evita selezione testo al doppio click */
+  background-color: transparent; /* Sfondo di default */
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid transparent; /* Spazio per bordo quando aperto */
+}
+.question-card.open .question-header {
+  background-color: var(
+    --light-gray-bg
+  ); /* Sfondo leggermente diverso quando aperto */
+  border-bottom-color: var(--border-color);
+}
+
+.question-card:not(.open) .question-header:hover {
+  background-color: #f9f9f9; /* Leggero hover quando chiuso */
+}
+
+.question-header .question-number {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--dark-color);
+  margin-right: auto; /* IMPORTANTE: Spinge la freccia a destra */
+}
+
+.question-header .question-toggle {
+  margin-left: 15px; /* Spazio tra numero/testo e freccia, se necessario */
+}
+
+.question-card.open .question-header .question-toggle i {
+  transform: rotate(180deg);
+}
+
+.question-content-wrapper {
+  padding: 20px 20px; /* Padding completo di default */
+  max-height: 1000px; /* Valore alto di default per mostrarlo */
+  /* overflow: hidden; -- Lo teniamo per quando si chiude */
+  transition: max-height 0.35s ease-in-out, padding-top 0.35s ease-in-out,
+    padding-bottom 0.35s ease-in-out;
+}
+
+/* Quando la card NON è aperta */
+.question-card:not(.open) .question-content-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+  max-height: 0;
+  overflow: hidden; /* ESSENZIALE per nascondere il contenuto quando è collassato */
+}
+
+/* Stili per l'header quando è aperto (la freccia ruota, lo sfondo cambia) */
+.question-card.open .question-header {
+  background-color: var(--light-gray-bg);
+  border-bottom-color: var(--border-color);
+}
+.question-card.open .question-header .question-toggle i {
+  transform: rotate(180deg);
+}
+
+.question-text {
+  font-size: 1rem;
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin-bottom: 20px; /* Spazio tra testo domanda e opzioni */
+}
+
+.answer-options {
+  list-style: none; /* Rimuove i pallini di default */
+  padding-left: 0; /* Rimuove il padding di default */
+  margin: 0; /* Rimuove il margine di default */
+}
+
+.answer-option {
+  /* Era div.answer-option */
+  display: flex;
+  align-items: flex-start; /* Per risposte su più righe */
+  padding: 10px 0; /* Spaziatura verticale tra opzioni */
+  font-size: 0.95rem;
+  border-bottom: 1px dotted #e9e9e9; /* Separatore leggero */
+}
+.answer-option:last-child {
+  border-bottom: none;
+}
+
+.answer-option .option-marker {
+  font-weight: 600;
+  color: var(--main-color); /* Colore principale del tema */
+  margin-right: 12px;
+  min-width: 20px; /* Assicura allineamento per A., B., C. etc. */
+  line-height: 1.5; /* Per allineamento verticale con testo risposta */
+}
+
+.answer-option .option-text {
+  flex: 1;
+  color: var(--text-dark); /* Testo risposta più scuro e leggibile */
+  line-height: 1.5;
+}
+
+/* Adattamenti per schermi piccoli se necessario */
+@media (max-width: 768px) {
+  .quiz-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .quiz-detail-header h1 {
+    font-size: 1.6rem;
+  }
+  .quiz-info-grid {
+    grid-template-columns: 1fr; /* Singola colonna su mobile */
+    gap: 15px;
+  }
+  .questions-preview-section h2 {
+    font-size: 1.3rem;
+  }
+  .question-header,
+  .question-card.open .question-content-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .question-header .question-number {
+    font-size: 1rem;
+  }
+  .question-text,
+  .answer-option {
+    font-size: 0.9rem;
+  }
+}
+
+/* Stile per il contenitore fallback (se necessario) */
+.custom-alert-fallback-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 80%;
+  max-width: 600px;
+}
+
+/* Stile base per gli alert personalizzati */
+.custom-alert {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center; /* Allinea l'icona (se presente) e il testo verticalmente */
+  justify-content: space-between; /* Spazio tra testo e pulsante di chiusura */
+
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-alert-close:hover {
+  opacity: 0.9;
+}
+
+/* Icona nell'alert (se la aggiungi all'HTML generato da showAlert) */
+.custom-alert i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.custom-alert-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+  color: inherit; /* Eredita il colore del testo dell'alert */
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0 5px; /* Aggiungi un po' di padding per facilitare il click */
+}
+
+.custom-alert-close:hover {
+  opacity: 1;
+}
+
+/* Colori per i diversi tipi di alert */
+.custom-alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+.custom-alert-info .custom-alert-close {
+  color: #0c5460;
+}
+
+.custom-alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.custom-alert-success .custom-alert-close {
+  color: #155724;
+}
+
+.custom-alert-warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+.custom-alert-warning .custom-alert-close {
+  color: #856404;
+}
+
+.custom-alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+.custom-alert-danger .custom-alert-close {
+  color: #721c24;
+}
+/* Stile per i pulsanti per assomigliare a quelli dell'immagine fornita */
+.btn-quiz-action-image-style {
+  background-color: var(
+    --main-color
+  ); /* Usa il verde scuro definito nelle variabili CSS */
+  color: var(--text-light); /* Testo bianco */
+  border: 1px solid var(--main-color); /* Bordo dello stesso colore */
+  padding: 0.5rem 1rem; /* Padding per una buona dimensione, simile a .btn-primary */
+  border-radius: 0.25rem; /* Angoli arrotondati standard */
+  text-decoration: none;
+  display: inline-flex; /* Necessario per allineare icona e testo correttamente */
+  align-items: center; /* Allinea icona e testo verticalmente */
+  gap: 0.4rem; /* Spazio tra icona e testo */
+  line-height: 1.5;
+  font-weight: 500; /* Leggermente bold */
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none; /* Impedisce la selezione del testo del pulsante */
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    color 0.15s ease-in-out;
+}
+
+/* Stili per l'interfaccia "grezza" di aggiunta domande/risposte */
+
+.question-block-raw {
+  background-color: #f7f8f2;
+  padding: 15px 20px; /* Aumentato padding */
+  margin-bottom: 25px; /* Aumentato margine inferiore per separare le domande */
+  /* border-bottom: 1px solid #e0e0e0; */ /* Puoi aggiungere un separatore leggero se vuoi */
+}
+
+.question-block-raw .d-flex.justify-content-between {
+  /* Targettizza specificamente l'header della domanda */
+  margin-bottom: 15px; /* Più spazio tra titolo/bottone rimuovi e testo domanda */
+}
+
+.question-block-raw > .form-group {
+  /* Gruppo del testo della domanda */
+  margin-bottom: 15px; /* Spazio dopo il textarea della domanda */
+}
+
+.answer-section-title-raw {
+  /* Titolo "Risposte:" */
+  font-size: 1rem; /* Leggermente più piccolo del titolo domanda, ma leggibile */
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-top: 20px; /* Spazio sopra "Risposte:" */
+  margin-bottom: 10px; /* Spazio sotto "Risposte:" */
+}
+
+.answers-container-raw {
+  padding-left: 10px; /* Leggero indent per le risposte */
+}
+
+.answer-block-raw {
+  background-color: #fdfaf3;
+  padding: 12px 15px; /* Aumentato padding interno alla risposta */
+  margin-bottom: 10px; /* Spazio tra le risposte */
+  /* border: 1px solid #f0f0f0; */ /* Un bordo molto leggero se desiderato */
+  border-radius: 3px; /* Un leggerissimo arrotondamento può migliorare l'estetica */
+}
+
+.answer-block-raw .d-flex.justify-content-between {
+  /* Header della singola risposta */
+  margin-bottom: 8px; /* Spazio tra titolo/bottone rimuovi e testo risposta */
+}
+.answer-block-raw .form-group {
+  /* Ogni gruppo form dentro una risposta */
+  margin-bottom: 8px; /* Spazio tra input testo, radio, e punti */
+}
+.answer-block-raw .form-group:last-child {
+  margin-bottom: 0; /* Rimuovi margine dall'ultimo elemento nel blocco risposta */
+}
+
+.form-label-raw {
+  font-size: 0.9rem;
+  margin-bottom: 5px; /* Spazio standard sotto la label */
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.form-control-raw {
+  padding: 0.5rem 0.75rem; /* Padding input leggermente aumentato */
+  font-size: 0.9rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem; /* Arrotondamento standard bootstrap */
+}
+.form-control-raw:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 0.15rem rgba(85, 107, 47, 0.25); /* Ombra focus leggermente più pronunciata */
+}
+
+.radio-group-raw {
+  padding-top: 5px; /* Un po' di spazio sopra i radio button */
+}
+.radio-group-raw .form-check-inline {
+  margin-bottom: 5px; /* Spazio sotto ogni radio se vanno a capo */
+}
+.form-check-label-raw {
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+/* Bottone "Aggiungi Risposta" dentro una domanda */
+.question-block-raw > .btn.add-answer {
+  /* Target più specifico */
+  margin-top: 15px; /* Più spazio sopra questo bottone */
+}
+
+/* Stile per il bottone di rimozione risposta (solo testo X) */
+.btn-quiz-action-image-style-remove-answer {
+  background-color: #e74c3c !important; /* Rosso per azione distruttiva */
+  color: white !important;
+  border: 1px solid #e74c3c !important;
+  padding: 3px 8px !important; /* Leggermente più grande per facilitare il click */
+  font-size: 0.85rem !important;
+  line-height: 1 !important;
+  border-radius: 0.2rem !important;
+  font-weight: bold;
+}
+.btn-quiz-action-image-style-remove-answer:hover {
+  background-color: #c0392b !important; /* Rosso più scuro */
+  border-color: #c0392b !important;
+}
+
+/* Pulsanti principali in fondo (Aggiungi Domanda, Annulla, Salva) */
+/* Manteniamo lo stile .btn-quiz-action-image-style che avevamo definito */
+.btn-quiz-action-image-style {
+  background-color: var(--main-color);
+  color: var(--text-light);
+  border: 1px solid var(--main-color);
+  padding: 0.5rem 1rem; /* Buon padding per leggibilità e click */
+  font-size: 0.95rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  /* ... altri stili da .btn-quiz-action-image-style che vuoi mantenere ... */
+  line-height: 1.5;
+  font-weight: 500;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    color 0.15s ease-in-out;
+}
+.btn-quiz-action-image-style:hover {
+  background-color: var(--dark-color);
+  border-color: var(--dark-color);
+}
+.btn-quiz-action-image-style i {
+  /* Se riattivi le icone */
+  font-size: 0.9em;
+}
+
+/* Contenitore dei pulsanti principali in fondo */
+#questions-section .card-body > .d-flex.justify-content-start {
+  margin-top: 25px; /* Più spazio sopra la riga dei pulsanti principali */
+  padding-top: 20px; /* Padding sopra */
+  border-top: 1px solid #e0e0e0; /* Linea separatrice sopra i pulsanti principali */
+}
+
+/* === Stili Specifici per Pagina Creazione Quiz (No Bootstrap) === */
+
+/* Variabili aggiuntive se necessarie (alcune già definite nella tua :root) */
+:root {
+  --form-input-border-color: #ced4da; /* Già presente come --border-color? */
+  --form-input-focus-border-color: var(--main-color);
+  --form-input-focus-box-shadow-color: rgba(
+    85,
+    107,
+    47,
+    0.25
+  ); /* Verde del tema */
+  --background-question-block: #fdfdfa; /* Un bianco leggermente "caldo" */
+  --border-question-block: #e9e4d9; /* Bordo leggermente colorato */
+  --background-answer-block: #f7f8f2; /* Verde molto chiaro ripreso dal tuo tema */
+  --border-answer-block: #d1d8c7; /* Bordo verde chiaro */
+  --text-muted-custom: #6c757d; /* Già presente come --text-muted */
+}
+
+.page-main-title {
+  /* Se usi questa classe per "Crea un nuovo Quiz" */
+  color: var(--dark-color);
+  margin-bottom: 25px;
+  font-size: 2rem; /* Coerente con il tuo .content h1 */
+}
+
+.alert-placeholder {
+  /* Contenitore per gli alert */
+  margin-bottom: 1.5rem;
+}
+
+/* Card Personalizzata per la pagina di creazione */
+/* Usiamo le tue classi .card esistenti per coerenza, se possibile.
+   Se vuoi uno stile diverso specificamente qui, usa .custom-card
+   come avevamo fatto. Per ora, assumo che tu voglia riutilizzare .card.
+   Se #quiz-details-section e #questions-section > div sono già .card,
+   allora non hai bisogno di .custom-card.
+*/
+/* Se vuoi usare .custom-card specificamente: */
+.custom-card {
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color); /* Usa il tuo var(--border-color) */
+  border-radius: 8px; /* Coerente con il tuo .card */
+  margin-bottom: 25px; /* Spazio tra le card */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.07); /* Ombra leggera */
+}
+.custom-card-header {
+  padding: 1rem 1.25rem; /* Buon padding */
+  background-color: var(--light-gray-bg); /* Sfondo chiaro per header */
+  border-bottom: 1px solid var(--border-color);
+  border-top-left-radius: 7px; /* Arrotonda con il parent */
+  border-top-right-radius: 7px;
+}
+.custom-card-title {
+  font-size: 1.25rem; /* Coerente con il tuo .card-title */
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0;
+}
+.custom-card-body {
+  padding: 1.25rem;
+}
+.box-shadow-light {
+  /* Se vuoi ombre diverse */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+.box-shadow-extra-light {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Layout Form per date affiancate */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px; /* Gutter */
+  margin-right: -10px; /* Gutter */
+}
+.form-col-half {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+@media (max-width: 768px) {
+  /* Su mobile, le colonne vanno una sotto l'altra */
+  .form-col-half {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* Elementi Form Personalizzati (label, input, textarea) */
+.form-field-group {
+  margin-bottom: 1.25rem; /* Spazio consistente */
+}
+.form-label-styled {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem; /* Leggermente più piccolo del tuo <label> base */
+  font-weight: 500; /* Consistente con il tuo <label> base */
+  color: var(--text-dark);
+}
+.label-bold-styled {
+  font-weight: 600; /* O usa la tua classe .bold */
+}
+.label-small-styled {
+  font-size: 0.85rem;
+  color: #555; /* Un grigio scuro per le label piccole */
+}
+.label-accent-color-styled {
+  color: var(--main-color); /* Per evidenziare "Risposta X" */
+}
+
+/* Stili per input e textarea, cerca di ereditare/allineare con i tuoi stili globali */
+.form-input-styled,
+.textarea-styled {
+  width: 100%;
+  padding: 10px; /* Consistente con i tuoi input globali */
+  font-size: 0.95rem; /* Consistente */
+  line-height: 1.6; /* Consistente */
+  color: var(--text-dark);
+  background-color: #fff;
+  border: 1px solid var(--form-input-border-color, var(--border-color)); /* Usa --border-color se la variabile custom non c'è */
+  border-radius: 4px; /* Consistente */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.textarea-styled {
+  min-height: 90px; /* Un po' meno del tuo 100px base se vuoi differenziare */
+  resize: vertical;
+}
+.form-input-styled:focus,
+.textarea-styled:focus {
+  border-color: var(--form-input-focus-border-color, var(--primary-blue));
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem
+    var(--form-input-focus-box-shadow-color, rgba(0, 123, 255, 0.25));
+}
+.input-small-styled {
+  /* Per input testo risposta e punti */
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+.input-numerical-styled {
+  /* Per campo punti */
+  width: 75px !important; /* Dimensione fissa */
+  text-align: center;
+}
+
+/* Bottoni Personalizzati */
+/* La classe .btn definita globalmente è un buon punto di partenza.
+   Le classi .button-styled-* possono essere usate per variazioni.
+*/
+.button-styled {
+  /* Classe base se .btn non è sufficiente o per specificità */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px; /* Leggermente meno di .btn se vuoi differenziare */
+  font-size: 0.9rem; /* Un po' più piccolo */
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: 5px; /* Consistente con .btn */
+  transition: all 0.15s ease-in-out;
+}
+.icon-spacing-right {
+  margin-right: 0.4em;
+}
+.icon-spacing-right-small {
+  margin-right: 0.3em;
+}
+
+.button-primary-styled {
+  /* Continua e Salva */
+  color: var(--text-light);
+  background-color: var(--main-color); /* Verde principale */
+  border-color: var(--main-color);
+  text-decoration: none !important;
+}
+.button-primary-styled:hover {
+  background-color: var(--dark-color);
+  border-color: var(--dark-color);
+  transform: translateY(-1px);
+  text-decoration: none !important;
+}
+
+.button-secondary-styled {
+  /* Aggiungi Domanda, Aggiungi Risposta */
+  color: var(--text-light);
+  background-color: var(--secondary-gray); /* Usa il tuo grigio secondario */
+  border-color: var(--secondary-gray);
+}
+.button-secondary-styled:hover {
+  background-color: #5a6268; /* Grigio più scuro */
+  border-color: #545b62;
+  transform: translateY(-1px);
+}
+
+.button-success-styled {
+  /* Salva Quiz e Domande - se vuoi un verde diverso dal primario */
+  color: var(--text-light);
+  background-color: #198754; /* Un verde "success" comune */
+  border-color: #198754;
+}
+.button-success-styled:hover {
+  background-color: #157347;
+  border-color: #146c43;
+  transform: translateY(-1px);
+}
+
+.button-danger-styled {
+  /* Annulla Creazione, Rimuovi Risposta (piena) */
+  color: var(--text-light);
+  background-color: #dc3545; /* Rosso "danger" comune */
+  border-color: #dc3545;
+}
+.button-danger-styled:hover {
+  background-color: #bb2d3b;
+  border-color: #b02a37;
+  transform: translateY(-1px);
+}
+
+.button-danger-outline-styled {
+  /* Rimuovi Domanda */
+  color: #dc3545;
+  border-color: #dc3545;
+  background-color: transparent;
+}
+.button-danger-outline-styled:hover {
+  color: var(--text-light);
+  background-color: #dc3545;
+}
+
+.button-grey-styled {
+  /* Per modale "Indietro" */
+  color: var(--text-dark);
+  background-color: #e9ecef; /* Grigio chiaro */
+  border-color: #ced4da;
+}
+.button-grey-styled:hover {
+  background-color: #d3d9df;
+}
+
+.button-small-styled {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+.button-extra-small-styled {
+  /* Per la X di "Rimuovi Risposta" */
+  padding: 3px 7px;
+  font-size: 0.75rem;
+  line-height: 1; /* Per contenere l'altezza */
+}
+.button-extra-small-styled i {
+  font-size: 0.9em;
+  vertical-align: baseline; /* Miglior allineamento verticale per la X */
+}
+
+/* Contenitori Azioni */
+.form-actions-container.text-align-right {
+  /* Per "Continua e Aggiungi Domande" */
+  text-align: right;
+}
+.main-actions-bar {
+  /* Barra in fondo con Aggiungi Domanda, Annulla, Salva */
+  display: flex;
+  flex-wrap: wrap; /* Per responsività */
+  gap: 0.75rem; /* Spazio tra i bottoni */
+  border-top: 1px solid var(--border-color); /* Linea separatrice */
+  padding-top: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+/* Messaggi Placeholder (Nessuna Domanda/Risposta) */
+.message-placeholder-styled {
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color); /* Stile tratteggiato del tuo .no-results */
+  border-radius: 6px;
+  background-color: var(--light-gray-bg); /* Sfondo molto chiaro */
+  padding: 1.5rem 1rem; /* Padding generoso */
+  text-align: center;
+}
+.message-inline-styled {
+  /* Per "Nessuna risposta aggiunta..." */
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--text-muted);
+  padding: 0.5rem 0; /* Spazio verticale */
+  display: block; /* Occupa la sua riga */
+}
+
+/* Struttura Creazione Domande/Risposte */
+.question-block-styled {
+  border: 1px solid var(--border-question-block);
+  border-radius: 6px;
+  background-color: var(--background-card); /* Sfondo bianco per il blocco */
+  margin-bottom: 1.75rem; /* Più spazio tra le domande */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.question-header-styled {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(
+    --background-question-block
+  ); /* Sfondo bianco "caldo" */
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--border-question-block);
+  border-top-left-radius: 5px; /* Arrotonda con il parent */
+  border-top-right-radius: 5px;
+}
+.question-title-styled {
+  font-size: 1.15rem; /* Titolo "Domanda X" */
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0;
+}
+.question-body-styled {
+  padding: 1.25rem; /* Padding per il corpo della domanda */
+}
+.answers-area-title-styled {
+  /* Titolo "Risposte:" */
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  border-bottom: 1px solid var(--border-color); /* Separatore standard */
+  padding-bottom: 0.75rem;
+  margin-top: 1.25rem; /* Spazio sopra */
+  margin-bottom: 1rem; /* Spazio sotto */
+}
+.answers-container-styled {
+  padding-left: 0.5rem; /* Leggera indentazione per le risposte */
+}
+
+.answer-block-styled {
+  background-color: var(--background-answer-block); /* Verde chiarissimo */
+  border: 1px solid var(--border-answer-block);
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem; /* Spazio tra blocchi risposta */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.answer-header-styled {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Radio Buttons */
+.radio-option-group-styled {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Spazio orizzontale tra opzioni radio */
+}
+.radio-option-styled {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem; /* Per quando vanno a capo */
+}
+.radio-input-styled {
+  margin-right: 0.4rem;
+  accent-color: var(
+    --main-color
+  ); /* Usa colore principale del tema per il check */
+  width: 16px; /* Dimensioni standard */
+  height: 16px;
+}
+.radio-label-styled {
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--text-dark);
+  cursor: pointer;
+  line-height: 1.2; /* Miglior allineamento verticale */
+}
+
+/* Modale Personalizzato (riutilizza il tuo .modal se possibile) */
+/* Se il tuo .modal/.modal-content è già definito e adeguato, puoi omettere questo.
+   Altrimenti, ecco una versione che si adatta al nuovo HTML del modale.
+*/
+.custom-modal {
+  display: none; /* Nascosto di default */
+  position: fixed;
+  z-index: 1050; /* Sopra la maggior parte degli elementi */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Scroll se il contenuto è troppo grande */
+  background-color: rgba(0, 0, 0, 0.6); /* Sfondo scuro semitrasparente */
+  padding-top: 50px; /* Spazio dall'alto */
+}
+.custom-modal-content {
+  background-color: var(--background-card); /* Sfondo bianco per il contenuto */
+  margin: auto; /* Centra orizzontalmente */
+  padding: 25px;
+  border: 1px solid #888; /* Bordo leggero */
+  width: 90%;
+  max-width: 500px; /* Larghezza massima */
+  border-radius: 8px; /* Consistente con le tue card */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative; /* Per il bottone di chiusura */
+}
+.custom-modal-close-button {
+  color: #777;
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  font-size: 2rem; /* Più grande per facilitare il click */
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.custom-modal-close-button:hover {
+  color: #333;
+}
+
+.custom-modal-title {
+  font-size: 1.4rem; /* Coerente con il tuo .modal-content h2 */
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--dark-color);
+}
+.custom-modal-text {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.custom-modal-actions {
+  text-align: right; /* Allinea bottoni a destra */
+  margin-top: 1.5rem;
+  display: flex; /* Per spaziare i bottoni */
+  justify-content: flex-end;
+  gap: 0.75rem; /* Spazio tra i bottoni */
+}
+
+/* Utility Classes per Spacing (minimali - adatta ai tuoi bisogni) */
+.margin-bottom-extra-small {
+  margin-bottom: 0.25rem !important;
+}
+.margin-bottom-small {
+  margin-bottom: 0.5rem !important;
+}
+/* .margin-bottom-medium, .margin-bottom-large sono già definite nell'HTML,
+   assicurati che corrispondano ai tuoi standard (es. 1rem, 1.5rem) */
+
+.padding-medium-horizontal {
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+.padding-left-small {
+  padding-left: 0.5rem !important;
+}
+.padding-vertical-medium {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Altre utility usate nell'HTML (display-block, text-align-*) dovrebbero già
+   essere coperte dai tuoi stili globali o puoi aggiungerle se necessario.
+   .flex-container e le sue varianti sono state usate nell'HTML; se non le hai,
+   ecco una base:
+*/
+.flex-container {
+  display: flex !important;
+}
+.flex-justify-between {
+  justify-content: space-between !important;
+}
+.flex-align-center {
+  align-items: center !important;
+}
+.flex-gap-medium {
+  gap: 1rem !important;
+}
+
+.border-top-light {
+  border-top: 1px solid var(--border-color) !important;
+}
+
+/* Stile per il form di partecipazione */
+#participate-form {
+  max-width: 750px; /* Imposta una larghezza massima per il form stesso */
+  margin-left: auto; /* Centra il form se il suo contenitore è più largo */
+  margin-right: auto;
+  width: 100%; /* Assicura che usi lo spazio disponibile fino alla max-width */
+}
+
+/* Blocco di una singola domanda (question-item) */
+.question-item {
+  background-color: var(
+    --background-card
+  ); /* Sfondo bianco per la card della domanda */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px; /* Spazio tra le domande */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Ombra leggera */
+}
+
+.question-item .question-text {
+  font-size: 1.1em; /* Dimensione testo domanda */
+  font-weight: 600; /* Testo domanda in grassetto */
+  color: var(--text-dark);
+  margin-bottom: 20px; /* Spazio tra testo domanda e opzioni di risposta */
+  line-height: 1.5;
+}
+.question-item .question-text span {
+  /* Parte del testo della domanda non numerata */
+  font-weight: normal;
+}
+
+/* Contenitore delle opzioni di risposta */
+.question-item .answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Spazio verticale tra le opzioni di risposta */
+}
+
+.question-item .answer-option label {
+  display: flex; /* Per allineare checkbox e testo */
+  align-items: center;
+  font-weight: normal; /* Il tuo <label> base ha 500, qui normale */
+  font-size: 1rem; /* Dimensione testo opzione */
+  color: var(--text-dark);
+  padding: 10px 12px; /* Padding interno per renderla cliccabile più facilmente */
+  border: 1px solid transparent; /* Bordo trasparente per l'hover */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.question-item .answer-option label:hover {
+  background-color: #f8f9fa; /* Grigio molto chiaro all'hover */
+  border-color: #e9ecef;
+}
+
+.question-item .answer-option input[type="checkbox"],
+.question-item .answer-option input[type="radio"] {
+  /* Se in futuro usi radio */
+  margin-right: 12px; /* Spazio tra checkbox e testo */
+  transform: scale(1.2); /* Rende la checkbox leggermente più grande */
+  accent-color: var(
+    --main-color
+  ); /* Colore della checkbox quando selezionata */
+  cursor: pointer;
+}
+/* Stili per gli input quando sono focus-visible (accessibilità tastiera) */
+.question-item .answer-option input[type="checkbox"]:focus-visible + span, /* Assumendo che il testo sia in uno span o direttamente dopo */
+.question-item .answer-option input[type="radio"]:focus-visible + span {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.question-item .answer-option input[type="checkbox"]:checked + label {
+  /* Stile per la label quando la checkbox è checked */
+  background-color: var(--light-color); /* Un verde più chiaro del tema */
+  color: var(--text-dark); /* O var(--text-light) se lo sfondo è scuro */
+  border-color: var(--main-color);
+  font-weight: 500;
+}
+
+/* Messaggio se non ci sono domande o opzioni */
+.question-item p[style*="color: #777"] {
+  /* Stile per "Nessuna opzione..." */
+  padding: 10px 0;
+  font-style: italic;
+  color: var(--text-muted) !important; /* Usa la variabile per coerenza */
+}
+
+/* Contenitore per gli alert nella pagina di partecipazione */
+#alert-container-participate .custom-alert {
+  /* Riusa i tuoi stili .custom-alert */
+  /* Eventuali aggiustamenti specifici se necessario */
+  margin-top: 10px;
+}
+
+/* Stili per il messaggio di caricamento (già presente in JS) */
+.loading-message {
+  /* Assicurati sia definito globalmente o qui */
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px 0;
+  text-align: center; /* Se non già incluso nella classe */
+}
+
+/* Stili per i placeholder (già presente in JS, come .message-placeholder-styled) */
+.message-placeholder-styled {
+  /* Assicurati sia definito globalmente o qui */
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+  border-radius: 6px;
+  background-color: var(--light-gray-bg);
+  padding: 1.5rem 1rem;
+  text-align: center; /* Se non già incluso nella classe */
+}
+
+/* Stili per la paginazione (se non già globali e sufficienti) */
+.pagination {
+  display: flex;
+  justify-content: center; /* Centra i controlli se sono l'unico elemento */
+  align-items: center;
+  margin-top: 30px;
+}
+.pagination-wrapper {
+  /* Wrapper per info e controlli */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.pagination-info {
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+.pagination-controls button,
+.pagination-controls span {
+  margin: 0 3px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #ddd);
+  background-color: #fff;
+  color: var(--main-color, #007bff);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.pagination-controls button:hover:not(:disabled) {
+  background-color: var(--main-color-light, #e9ecef);
+  border-color: var(--main-color, #007bff);
+}
+.pagination-controls button:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  background-color: #f8f8f8;
+}
+.pagination-controls span.current-page {
+  background-color: var(--main-color, #007bff);
+  color: #fff;
+  font-weight: bold;
+  border-color: var(--main-color, #007bff);
+}
+.loading-message,
+.error-message-placeholder {
+  /* Stili per messaggi di stato */
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+  color: var(--text-muted);
+}
+
+/* MODIFICA: Stile per select (raggruppa con i tuoi stili input/select esistenti) */
+/* Se hai una classe .custom-select-styled o simili, applicala a tutti i tuoi select */
+select, /* Applica lo stile base a tutti i select */
+.custom-select-styled,
+#per_page_select_participations,
+#per_page_select_myquiz,
+#per_page_select,
+#sort_by_select /* Assicurati di includere tutti gli ID dei tuoi select qui o usa una classe comune */ {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: #fff;
+  color: var(--text-dark);
+  cursor: pointer;
+  min-width: 70px; /* Minimo per "Elementi:" */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23333333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.8em;
+  padding-right: 2.5rem; /* Spazio per la freccia custom */
+  line-height: 1.5; /* Assicura altezza consistente */
+}
+/* MODIFICA: Stile focus per select (raggruppa con i tuoi stili :focus per input) */
+select:focus,
+.custom-select-styled:focus,
+#per_page_select_participations:focus,
+#per_page_select_myquiz:focus,
+#per_page_select:focus,
+#sort_by_select:focus {
+  border-color: var(--main-color); /* O var(--primary-blue) */
+  box-shadow: 0 0 0 0.2rem
+    var(--form-input-focus-box-shadow-color, rgba(85, 107, 47, 0.25)); /* Usa la tua variabile esistente se l'hai */
+  outline: none;
+}
+
+/* --- Alert (MANTIENI I TUOI .custom-alert ESISTENTI) --- */
+/* Assicurati che siano completi come quelli che ti ho fornito prima. */
+/* .custom-alert { ... } */
+/* .custom-alert-success { ... } ecc. */
+
+/* --- Card --- */
+/* MODIFICA la tua classe .card esistente */
+.card {
+  background-color: var(--background-card, #fff);
+  border: 1px solid var(--border-color, #e0e0e0); /* Bordo più leggero e moderno */
+  border-radius: 10px; /* Più arrotondato */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* Ombra più morbida */
+  /* padding: 20px; RIMUOVI padding base dalla card principale */
+  margin-bottom: 25px; /* Aumentato */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Importante per i border-radius dei figli */
+}
+
+/* AGGIUNTA: Sottocomponenti della card (se non li hai già) */
+.card-header {
+  padding: 15px 20px; /* Buon padding */
+  border-bottom: 1px solid var(--border-color, #f0f0f0); /* Separatore più leggero */
+  background-color: var(
+    --light-gray-bg,
+    #f8f9fa
+  ); /* Sfondo leggermente diverso per l'header */
+  /* Non serve border-radius qui se .card ha overflow:hidden */
+}
+.card-body {
+  padding: 20px;
+  flex-grow: 1; /* Permette al corpo di crescere */
+}
+.card-footer {
+  padding: 15px 20px;
+  background-color: var(--light-gray-bg, #f8f9fa);
+  border-top: 1px solid var(--border-color, #f0f0f0);
+}
+
+.participations-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(340px, 1fr)
+  ); /* Card un po' più larghe */
+  gap: 30px; /* Più spazio tra le card */
+}
+
+.participation-card {
+  /* Eredita da .card ma con specificità */
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+}
+.participation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.participation-card-header {
+  /* Usa .card-header come base */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.participation-card-title {
+  /* Puoi usare il tuo .card-title se appropriato */
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+.participation-card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.participation-card-title a:hover {
+  color: var(--main-color);
+  text-decoration: none; /* O underline, a tua scelta */
+}
+
+.participation-card-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #eef0f2; /* Sfondo per la data, più neutro */
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.participation-card-date i {
+  font-size: 0.9em;
+}
+
+.participation-score-section {
+  margin-bottom: 15px;
+}
+.score-label {
+  font-size: 0.8rem; /* Più piccolo e discreto */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.score-label i {
+  color: var(--accent-color); /* La tua stella gialla */
+  font-size: 0.9em;
+}
+.score-display {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  line-height: 1.4; /* Migliora leggibilità se va a capo */
+}
+.score-display .score-value {
+  font-weight: 700; /* Punteggio in grassetto */
+}
+.score-display .score-value.score-high {
+  color: var(--score-high-color);
+}
+.score-display .score-value.score-medium {
+  color: var(--score-medium-color);
+}
+.score-display .score-value.score-low {
+  color: var(--score-low-color);
+}
+
+.score-display .score-max,
+.score-display .score-unit {
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+.score-display .score-percentage {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-left: 8px; /* Più spazio */
+}
+.score-display .score-unavailable {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+/* MODIFICA o AGGIUNGI per Progress Bar */
+.progress-bar-container {
+  height: 8px; /* Più sottile e moderno */
+  background-color: #e9ecef; /* Sfondo neutro */
+  border-radius: 4px; /* Angoli arrotondati */
+  overflow: hidden;
+  margin-top: 10px; /* Spazio dalla sezione punteggio */
+}
+.progress-bar {
+  /* Classe base per la barra colorata interna */
+  height: 100%;
+  /* border-radius: 4px; Non serve se il container ha overflow:hidden e stesso radius */
+  transition: width 0.6s cubic-bezier(0.25, 0.1, 0.25, 1); /* Transizione più fluida */
+  /* Rimuovi display:flex e testo interno se non c'è testo */
+}
+/* Colori specifici per la barra, usa le tue classi bg-* o quelle definite nelle variabili */
+.progress-bar.progress-bar-success {
+  background-color: var(--score-high-color);
+}
+.progress-bar.progress-bar-warning {
+  background-color: var(--score-medium-color);
+}
+.progress-bar.progress-bar-danger {
+  background-color: var(--score-low-color);
+}
+
+.participation-card-actions {
+  /* Usa .card-footer come base */
+  text-align: right;
+}
+/* Lo stile per .btn.button-primary-styled.btn-sm dovrebbe già essere coperto
+   dalle tue definizioni globali di .btn, .button-primary-styled e .btn-sm.
+   Assicurati che .button-primary-styled usi var(--main-color).
+   E che .btn-sm riduca padding e font-size. */
+
+/* --- Messaggio "Nessun Risultato" (Migliorato) --- */
+/* INTEGRA questi stili con i tuoi .no-results esistenti o crea una nuova classe */
+.no-results-box {
+  /* Questa classe è usata nel PHP */
+  /* .card è già applicato, quindi eredita sfondo, bordo base, shadow */
+  text-align: center;
+  padding: 30px 20px; /* Adatta padding del .card-body se lo metti dentro */
+}
+.no-results-box .no-results-icon i {
+  font-size: 3rem; /* O più grande se preferisci */
+  color: var(--secondary-gray); /* Un grigio per l'icona */
+  margin-bottom: 20px;
+  display: block;
+}
+.no-results-box .no-results-title {
+  font-size: 1.3rem;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.no-results-box .no-results-text {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+.no-results-box .btn-lg {
+  /* Stile per il bottone grande */
+  padding: 10px 22px; /* Adatta al tuo stile .btn-lg se definito altrove */
+  font-size: 1rem;
+}
+
+/* --- Paginazione --- */
+/* Se vuoi unificare, assicurati che .pagination-container (o .pagination) sia stilizzato come
+   suggerito in precedenza (con sfondo card, shadow, padding) oppure rendilo più minimalista. */
+.pagination-container, /* Nuova classe per il <nav> della paginazione */
+.pagination {
+  /* Mantieni la tua classe .pagination se è usata altrove */
+  margin-top: 40px;
+  /* Esempio di stile più minimalista (rimuovi sfondo/ombra se vuoi): */
+  /* background-color: transparent; */
+  /* box-shadow: none; */
+  /* padding: 0; */
+}
+/* I tuoi stili per .pagination-wrapper, .pagination-info, .pagination-controls,
+   .compact-pagination, .page-item, .page-nav, .page-dots sono generalmente buoni.
+   Puoi personalizzare i colori di .page-item.active e :hover per allinearli
+   meglio a --main-color e --light-color se la palette --primary-blue non è
+   quella principale per le azioni. */
+
+.page-item.active {
+  background-color: var(--main-color); /* Usa il colore principale del tema */
+  border-color: var(--main-color);
+  color: white;
+  /* box-shadow: 0 2px 5px rgba(var(--rgb-main-color, 85,107,47), 0.3); /* Ombra basata sul colore principale - definisci --rgb-main-color */
+}
+.page-item:hover:not(.active):not(.disabled) {
+  background-color: var(
+    --light-color
+  ); /* Colore più chiaro del tema per hover */
+  border-color: var(--main-color);
+  color: var(--dark-color); /* O white se --light-color è scuro */
+}
+
+/* --- Media Queries (MANTIENI E ADATTA LE TUE ESISTENTI) --- */
+@media (max-width: 992px) {
+  .participations-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(300px, 1fr)
+    ); /* Adatta se necessario */
+    gap: 20px;
+  }
+  /* Altri aggiustamenti per tablet... */
+}
+
+@media (max-width: 768px) {
+  .page-header-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .per-page-controls-container {
+    width: 100%;
+  }
+  .per-page-form {
+    justify-content: flex-start; /* Allinea a sinistra */
+  }
+  h1.page-main-title,
+  h2.page-main-title {
+    font-size: 1.6rem; /* Riduci un po' il titolo */
+  }
+  .participations-grid {
+    grid-template-columns: 1fr; /* Singola colonna */
+  }
+  /* Altri aggiustamenti per mobile... */
+}
+
+.button-info-styled {
+  color: var(--text-light); /* Testo bianco, di solito va bene su sfondo blu */
+  background-color: var(
+    --light-blue
+  ); /* Usa la tua variabile per il blu primario */
+  border-color: var(--primary-blue);
+}
+.button-info-styled:hover {
+  color: var(--text-light);
+  background-color: var(--primary-blue); /* Blu più scuro per l'hover */
+  border-color: var(--primary-blue);
+  /* transform: translateY(-1px); // Già ereditato da .btn:hover se lo hai */
+}
+
+/* === Stili Specifici per Pagina Partecipazione Quiz (quiz_participate.php) === */
+
+/* --- Header della Pagina di Partecipazione --- */
+.quiz-participation-page-header {
+  /* Eredita da .page-header-controls (che ha display: flex, flex-wrap: wrap, gap: 20px) */
+  /* Forziamo un layout verticale e allineamento a sinistra per questa pagina */
+  flex-direction: column;
+  align-items: flex-start; /* Allinea titolo e descrizione a sinistra */
+  gap: 8px; /* Spazio tra titolo e descrizione */
+  margin-bottom: 40px; /* Più spazio prima dell'inizio del form */
+  /* Rimuoviamo il bordo inferiore da .page-header-controls se non lo vogliamo qui */
+  border-bottom: none;
+  width: 100%; /* Assicura che occupi la larghezza del suo contenitore */
+  max-width: 800px; /* Allineato con la larghezza del form sottostante */
+  margin-left: auto; /* Centra questo blocco se .main-content-page-padding è più largo */
+  margin-right: auto;
+}
+
+.quiz-participation-page-header .page-title-container .page-title-icon {
+  font-size: 2.2rem; /* Icona del titolo leggermente più grande */
+  color: var(--main-color);
+}
+.quiz-participation-page-header .page-title-container .page-main-title {
+  font-size: 2.1rem; /* Titolo principale più grande e d'impatto */
+}
+
+.quiz-participation-description {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  /* max-width ereditato dal parent .quiz-participation-page-header */
+  line-height: 1.6;
+}
+
+/* --- Contenitore Form --- */
+#participate-form {
+  max-width: 800px; /* Larghezza massima per il contenuto del quiz */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* --- Card delle Domande --- */
+.question-item.card {
+  /* Gli stili base di .card (sfondo, bordo arrotondato, ombra leggera) sono già buoni. */
+  /* Aumentiamo padding e margine per più respiro. */
+  padding: 30px 35px; /* Padding interno più generoso */
+  margin-bottom: 35px; /* Più spazio tra le card delle domande */
+  border-radius: 12px; /* Angoli più arrotondati per un look moderno */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07); /* Ombra leggermente più definita */
+}
+
+.question-item .question-text {
+  font-size: 1.3rem; /* Testo della domanda più grande */
+  font-weight: 600; /* "Domanda X:" in grassetto */
+  color: var(--dark-color);
+  margin-bottom: 25px; /* Più spazio tra testo domanda e opzioni */
+  line-height: 1.5;
+}
+
+.question-item .question-text span {
+  /* Testo effettivo della domanda */
+  font-weight: 400; /* Testo domanda normale */
+  margin-left: 8px;
+}
+
+/* --- Opzioni di Risposta --- */
+.question-item .answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Spazio verticale tra le opzioni di risposta */
+}
+
+.question-item .answer-option label {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 1rem; /* Testo delle opzioni leggibile */
+  color: var(--text-dark);
+  padding: 14px 18px; /* Padding per un'area cliccabile confortevole */
+  border: 1px solid var(--border-color);
+  border-radius: 8px; /* Angoli arrotondati consistenti */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+    box-shadow 0.15s ease-in-out, transform 0.1s ease;
+  background-color: var(
+    --background-card
+  ); /* Sfondo bianco di default, o #fff */
+}
+
+.question-item .answer-option label:hover {
+  background-color: #f7f7f7; /* Sfondo grigio molto chiaro per hover */
+  border-color: var(--main-color);
+  transform: translateY(-2px); /* Leggero effetto sollevamento */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.question-item .answer-option input[type="checkbox"] {
+  margin-right: 15px; /* Spazio tra checkbox e testo */
+  width: 20px; /* Checkbox più visibile */
+  height: 20px;
+  accent-color: var(--main-color);
+  cursor: pointer;
+  flex-shrink: 0; /* Impedisce alla checkbox di ridimensionarsi */
+}
+
+/* Stile per la label quando la sua checkbox interna è selezionata */
+/* Usare classe JS '.selected-answer' per massima compatibilità, o :has() per browser moderni */
+.question-item .answer-option label.selected-answer,
+.question-item .answer-option label:has(input[type="checkbox"]:checked),
+.question-item .answer-option label:has(input[type="radio"]:checked) {
+  background-color: rgba(
+    var(--rgb-main-color, 85, 107, 47),
+    0.1
+  ); /* Sfondo verde tema molto leggero */
+  border-color: var(--main-color);
+  color: var(--dark-color);
+  font-weight: 500; /* Leggermente più bold */
+  box-shadow: 0 2px 5px rgba(var(--rgb-main-color, 85, 107, 47), 0.15);
+}
+.question-item .answer-option label.selected-answer:hover,
+.question-item .answer-option label:has(input[type="checkbox"]:checked):hover,
+.question-item .answer-option label:has(input[type="radio"]:checked):hover {
+  background-color: rgba(
+    var(--rgb-main-color, 85, 107, 47),
+    0.18
+  ); /* Leggermente più scuro all'hover quando selezionato */
+  transform: translateY(
+    0
+  ); /* Rimuove l'effetto sollevamento quando già selezionato per stabilità */
+}
+
+/* Messaggio se non ci sono opzioni di risposta */
+.question-item p.no-answers-message {
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px;
+  background-color: var(--light-gray-bg); /* Sfondo neutro */
+  border-radius: 8px;
+  text-align: center;
+  border: 1px dashed var(--border-color);
+  margin-top: 20px;
+}
+
+/* Bottone di Invio */
+#participate-form .form-group.text-align-center {
+  margin-top: 40px; /* Spazio consistente sopra il bottone */
+  padding-top: 30px; /* Padding per separare visivamente */
+  border-top: 1px solid var(--border-color); /* Linea separatrice */
+}
+
+#participate-form .btn.button-primary-styled.btn-lg {
+  padding: 14px 32px; /* Padding generoso per il bottone principale */
+  font-size: 1.15rem; /* Testo del bottone più grande */
+  border-radius: 8px; /* Coerente con le altre card/elementi */
+}
+#participate-form .btn.button-primary-styled.btn-lg i.fas {
+  margin-right: 10px;
+  font-size: 1em; /* Icona proporzionata al testo */
+}
+
+/* Placeholder per alert (se usi il contenitore specifico) */
+#alert-container-participate {
+  max-width: 800px; /* Coerente con il form */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px; /* Spazio sotto gli alert, prima del form (o dell'header se l'alert è sopra) */
+}

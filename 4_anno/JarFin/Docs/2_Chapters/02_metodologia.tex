@@ -1,0 +1,179 @@
+\chapter{Metodologia di sviluppo e tecnologie adottate}
+
+\section{Metodologia di sviluppo}
+
+Lo sviluppo del sistema \textit{JarFin} è stato condotto adottando una metodologia Agile, con l’obiettivo di favorire un processo di progettazione incrementale, flessibile e orientato al cambiamento. In particolare, il progetto ha seguito i principi di \textbf{SCRUM}, integrati con l’approccio \textbf{Agile Model Driven Development (AMDD)}, al fine di bilanciare la necessità di una progettazione architetturale solida con i vantaggi dell’iterazione continua e del feedback costante.
+
+SCRUM è stato utilizzato come framework di riferimento per l’organizzazione del lavoro, la pianificazione delle attività e la gestione delle iterazioni di sviluppo. Il ciclo di vita del progetto è stato articolato in sprint di durata indicativa pari a due settimane, ciascuno caratterizzato da obiettivi ben definiti e dalla produzione di un incremento funzionale del sistema. Questa impostazione ha consentito di monitorare costantemente l’avanzamento del progetto e di adattare le scelte progettuali in base alle esigenze emerse durante lo sviluppo \cite{scrumOrg}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{2.0_scrum_framework.png}
+    \caption{Il framework SCRUM e il ciclo degli Sprint.}
+    \label{fig:scrum_framework}
+\end{figure}
+
+L’approccio AMDD ha guidato le attività di modellazione e progettazione. Invece di definire in modo esaustivo l’intera architettura nelle fasi iniziali, la modellazione è stata condotta in maniera incrementale, producendo modelli essenziali e sufficienti a supportare le decisioni architetturali di ciascuna iterazione. In particolare, sono stati realizzati diagrammi UML per i casi d’uso più rilevanti, successivamente raffinati nel corso dello sviluppo. Questo approccio ha permesso di evitare un’eccessiva rigidità progettuale, mantenendo una visione globale del sistema.
+
+\section{Organizzazione delle iterazioni}
+
+Il ciclo di sviluppo di JarFin è stato articolato in una serie di iterazioni successive, ciascuna focalizzata su specifici obiettivi funzionali e architetturali:
+
+\begin{itemize}
+    \item \textbf{Iterazione 0 – Envisioning e Analisi}: definizione del dominio applicativo, raccolta e analisi dei requisiti funzionali e non funzionali, identificazione dei principali casi d’uso e progettazione dell’architettura di alto livello;
+    \item \textbf{Iterazione 1 – Core Services}: sviluppo del servizio di accounting e implementazione della persistenza dei dati.
+    \item \textbf{Iterazione 2 – Analytics e Algoritmi}: sviluppo del servizio di analytics e implementazione degli algoritmi per l’elaborazione e l’analisi dei dati finanziari;
+    \item \textbf{Iterazione 3 – Integrazione e Interazione}: integrazione del modulo di Natural Language Understanding, dell’API Gateway e dell’interfaccia web.
+\end{itemize}
+
+Questa suddivisione ha consentito di affrontare progressivamente la complessità del sistema, validando le scelte progettuali a ogni iterazione e riducendo il rischio di errori architetturali nelle fasi avanzate dello sviluppo.
+
+\section{Architettura generale del sistema}
+
+L’architettura di JarFin è basata su un paradigma a microservizi, in cui il sistema è scomposto in un insieme di componenti indipendenti, ciascuno responsabile di una specifica area funzionale. Tale scelta architetturale è motivata dall’esigenza di garantire modularità, scalabilità e manutenibilità, oltre a facilitare l’evoluzione futura del sistema.
+
+Ogni microservizio è progettato come un’unità autonoma, dotata di una propria logica applicativa e, ove necessario, di un proprio livello di persistenza. La comunicazione tra i servizi avviene tramite API REST e scambio di messaggi in formato JSON, secondo i principi dello stile architetturale REST \cite{fieldingRest}.
+
+L’adozione di un’architettura distribuita consente inoltre di isolare le responsabilità dei singoli componenti, riducendo l’impatto delle modifiche e migliorando la resilienza complessiva del sistema in caso di malfunzionamenti localizzati.
+
+\section{Tecnologie adottate}
+
+La scelta dello stack tecnologico è stata guidata dalla necessità di utilizzare strumenti robusti, ampiamente supportati dalla community e adatti allo sviluppo di sistemi distribuiti.
+
+\subsection{Spring Boot}
+
+Per l’implementazione dei microservizi è stato utilizzato il framework \textbf{Spring Boot}, che fornisce un ambiente di sviluppo semplificato per la realizzazione di applicazioni Java basate su architettura a servizi. Spring Boot consente di ridurre significativamente la configurazione manuale, favorendo lo sviluppo rapido di applicazioni stand-alone e facilmente deployabili \cite{springboot}.
+
+Il framework supporta nativamente la creazione di API REST, l’integrazione con sistemi di persistenza e la gestione della configurazione dei servizi, risultando particolarmente adatto allo sviluppo di architetture a microservizi.
+
+\subsection{Database PostgreSQL e Containerizzazione}
+
+La persistenza dei dati è affidata a un database relazionale \textbf{PostgreSQL}, scelto per la sua affidabilità, conformità agli standard SQL e supporto a funzionalità avanzate di gestione dei dati. PostgreSQL garantisce l’integrità delle transazioni finanziarie (proprietà ACID) e supporta operazioni di interrogazione efficienti, fondamentali per le funzionalità di analisi offerte dal sistema.
+
+Per semplificare la gestione dell'ambiente di sviluppo e garantire l'isolamento dei dati, l'istanza del database è stata containerizzata tramite \textbf{Docker}.
+Questa scelta architetturale consente di avviare il servizio di persistenza in modo rapido e indipendente dalla configurazione del sistema operativo ospite, evitando installazioni locali invasive e garantendo un ambiente sempre pulito e riproducibile (Figura~\ref{fig:docker_vm}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{2.1_docker_vs_VM.png}
+    \caption{Confronto architetturale tra Macchine Virtuali e Container Docker \cite{geeksforgeeksDocker}.}
+    \label{fig:docker_vm}
+\end{figure}
+
+\subsection{Modulo di Natural Language Understanding}
+
+Per l’elaborazione del linguaggio naturale è stato sviluppato un modulo di Natural Language Understanding implementato in Java come microservizio dedicato. Il sistema utilizza tecniche di analisi lessicale e \textit{pattern matching} per identificare intenti e parametri rilevanti a partire dalle frasi dell’utente, consentendo l’esecuzione di operazioni finanziarie tramite comandi in linguaggio naturale.
+
+La scelta di una soluzione interna, anziché basata su servizi cloud esterni, consente di ridurre la latenza, mantenere il controllo sui dati sensibili dell’utente e garantire una maggiore integrazione con l’architettura complessiva del sistema.
+
+\section{Toolchain di progetto}
+
+Lo sviluppo del sistema \textit{JarFin} è stato supportato da una toolchain articolata, composta da strumenti dedicati alla modellazione, allo sviluppo, al versioning, al testing e all’analisi della qualità del codice.
+La scelta degli strumenti è stata guidata dall’obiettivo di garantire un processo di sviluppo strutturato, tracciabile e conforme alle buone pratiche dell’ingegneria del software.
+
+\subsection{Strumenti di modellazione}
+
+Per la modellazione del sistema è stato utilizzato \textbf{UMLet}, uno strumento leggero per la creazione di diagrammi UML. UMLet è stato impiegato per la realizzazione dei principali artefatti di modellazione previsti dall’approccio AMDD, in particolare:
+\begin{itemize}
+    \item diagrammi dei casi d’uso, per rappresentare le funzionalità offerte dal sistema e le interazioni con gli attori;
+    \item diagrammi delle classi, per descrivere la struttura statica dei principali componenti software;
+    \item diagrammi dei componenti, per modellare l’architettura a microservizi;
+    \item diagrammi di sequenza, per analizzare il comportamento dinamico del sistema nei casi d’uso critici.
+    \item diagrammi di deployment, per descrivere la distribuzione fisica dei nodi e l'architettura containerizzata del database.
+\end{itemize}
+
+L’utilizzo di UMLet ha consentito di produrre modelli essenziali e facilmente modificabili, in linea con i principi della modellazione incrementale promossi dall’Agile Model Driven Development.
+
+\subsection{Versioning e Project Management}
+
+Il controllo di versione del codice sorgente e la gestione del progetto sono stati affidati a \textbf{GitHub}.
+Git è stato utilizzato come sistema di versioning distribuito, permettendo di tracciare l’evoluzione del codice, gestire rami di sviluppo separati e mantenere uno storico completo delle modifiche.
+
+\newpage
+
+GitHub è stato inoltre impiegato come strumento di supporto al project management, sfruttando:
+\begin{itemize}
+    \item repository centralizzato per il codice sorgente;
+    \item Kanban board per la pianificazione delle attività e il tracciamento delle iterazioni;
+    \item Pull Request per la revisione del codice e l’integrazione controllata delle funzionalità.
+\end{itemize}
+
+Questa impostazione ha favorito un processo di sviluppo ordinato e trasparente, coerente con la metodologia SCRUM adottata.
+
+\subsection{Sviluppo backend}
+
+Il backend del sistema è stato sviluppato utilizzando il linguaggio \textbf{Java} e il framework \textbf{Spring Boot}.
+Spring Boot è stato scelto per la sua capacità di semplificare lo sviluppo di applicazioni basate su architettura a microservizi, riducendo la configurazione manuale e favorendo la realizzazione di servizi REST stand-alone.
+
+Ogni microservizio di JarFin è implementato come applicazione Spring Boot indipendente, responsabile di una specifica area funzionale del sistema, in linea con i principi di separazione delle responsabilità e modularità.
+
+\subsection{Testing delle API REST}
+
+Per la verifica manuale e il testing degli endpoint REST è stato utilizzato \textbf{Postman}.
+Lo strumento ha permesso di:
+\begin{itemize}
+    \item testare le operazioni CRUD esposte dai microservizi;
+    \item validare il corretto formato delle richieste e delle risposte JSON;
+    \item simulare scenari di utilizzo reali durante le fasi di sviluppo e integrazione.
+\end{itemize}
+
+L’uso di Postman ha facilitato l’individuazione precoce di errori di comunicazione tra i servizi e ha supportato la fase di debugging dell’API Gateway.
+
+\subsection{Unit Testing e Mocking}
+
+Il testing automatico della logica applicativa è stato realizzato tramite \textbf{JUnit 5}, framework di riferimento per il testing in ambiente Java, affiancato da \textbf{Mockito}, un framework di mocking essenziale per isolare le unità di codice.
+Mentre JUnit è stato utilizzato per definire il ciclo di vita dei test e le asserzioni, Mockito ha permesso di simulare il comportamento delle dipendenze esterne (mock), garantendo che i test unitari si focalizzassero esclusivamente sulla logica interna dei servizi, in particolare nei moduli di accounting, analytics e NLU.
+
+L’adozione combinata di questi strumenti ha contribuito a migliorare l’affidabilità del sistema e a ridurre il rischio di regressioni durante l’evoluzione del codice.
+
+\subsection{Analisi della copertura del codice}
+
+Per l’analisi della copertura dei test è stato utilizzato il plugin \textbf{EclEmma} (basato sulla libreria \textbf{JaCoCo}), integrato direttamente nell’ambiente di sviluppo.
+Lo strumento consente di misurare dinamicamente la percentuale di codice eseguito durante l’esecuzione dei test (code coverage), fornendo indicatori visivi e quantitativi utili per valutare l’efficacia della suite di test.
+
+Le metriche di copertura hanno supportato l’identificazione delle porzioni di codice critiche non ancora verificate, guidando il miglioramento progressivo dei test unitari.
+
+\subsection{Analisi statica e architetturale}
+
+La qualità del software è stata monitorata su due livelli distinti mediante l'uso combinato di strumenti di analisi statica:
+
+\subsubsection{Qualità del Codice (SonarLint)}
+La qualità strutturale e la conformità agli standard sono state analizzate mediante \textbf{SonarLint}. Lo strumento è stato utilizzato per:
+\begin{itemize}
+    \item rilevare metriche di complessità cognitiva e ciclomatica puntuale;
+    \item individuare \textit{code smells}, bug potenziali e vulnerabilità di sicurezza;
+    \item supportare la verifica del rispetto dei principi di Clean Code.
+\end{itemize}
+
+\subsubsection{Qualità Architetturale (CodeMR)}
+Per un'analisi di più alto livello, è stato introdotto \textbf{CodeMR}, uno strumento di analisi statica avanzata focalizzato sulla struttura del software.
+A differenza dei linter classici, CodeMR ha permesso di visualizzare e mappare le dipendenze tra i package, calcolando metriche architetturali fondamentali quali:
+\begin{itemize}
+    \item \textbf{Accoppiamento (Coupling)}: per valutare l'indipendenza dei moduli;
+    \item \textbf{Complessità Ciclomatica}: aggregata a livello di classe e package;
+    \item \textbf{Coesione}: per verificare la responsabilità singola delle classi.
+\end{itemize}
+L'utilizzo di CodeMR è stato determinante per verificare l'assenza di dipendenze cicliche tra i microservizi e per identificare preventivamente potenziali ``God Classes'' (classi monolitiche con troppe responsabilità), facilitando il refactoring verso un'architettura più modulare.
+
+\subsection{Ambienti di Sviluppo (IDE) e Build Automation}
+
+Per la gestione del ciclo di vita del software sono stati utilizzati due ambienti di sviluppo integrati (IDE) complementari, scelti in base alle specifiche esigenze delle diverse fasi di lavoro:
+
+\begin{itemize}
+    \item \textbf{Visual Studio Code}: utilizzato come editor versatile per le attività di supporto e modellazione. Nello specifico, grazie all'integrazione dell'estensione \textit{UMLet}, è stato impiegato per la realizzazione dei diagrammi UML. È stato inoltre lo strumento di riferimento per la redazione della documentazione tecnica (LaTeX/Markdown) e per la gestione delle operazioni di versioning tramite l'integrazione diretta con GitHub.
+    \item \textbf{Eclipse}: adottato come IDE principale per lo sviluppo sia del backend che del frontend. È stato utilizzato per la scrittura del codice sorgente Java, la gestione delle risorse web, il debugging avanzato dei microservizi e l'esecuzione dei test unitari.
+\end{itemize}
+
+La build automation e la gestione delle dipendenze del progetto Java sono state affidate ad \textbf{Apache Maven}, garantendo la riproducibilità del processo di compilazione e una gestione centralizzata delle librerie su diverse macchine di sviluppo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{2.2_toolchain.png}
+    \caption{Il flusso di lavoro e la toolchain integrata del progetto JarFin.}
+    \label{fig:toolchain}
+\end{figure}
+
+\subsection{Considerazioni sulla toolchain}
+
+L’integrazione degli strumenti descritti ha permesso di coprire l’intero ciclo di vita del software, dalla modellazione iniziale alla verifica della qualità del codice.
+La toolchain adottata rappresenta una soluzione completa e coerente con gli obiettivi del progetto, fornendo un supporto efficace sia allo sviluppo incrementale sia alla validazione tecnica del sistema (Figura~\ref{fig:toolchain}).

@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JarFin - Dashboard Finanziaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .toast-container-custom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast-custom {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 320px;
+            animation: slideInRight 0.3s ease-out;
+            border-left: 4px solid;
+        }
+
+        .toast-custom.success {
+            border-left-color: #10b981;
+        }
+
+        .toast-custom.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast-custom.info {
+            border-left-color: #2563eb;
+        }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .toast-custom.success .toast-icon {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .toast-custom.error .toast-icon {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .toast-custom.info .toast-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .toast-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .toast-close:hover {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        .voice-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .voice-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .audio-waves {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 140px;
+            margin-bottom: 50px;
+        }
+
+        .wave-line {
+            width: 5px;
+            background: linear-gradient(to top, #2563eb, #60a5fa);
+            border-radius: 4px;
+            transition: height 0.1s ease-out;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }
+
+        .wave-line:nth-child(1) { height: 25px; }
+        .wave-line:nth-child(2) { height: 40px; }
+        .wave-line:nth-child(3) { height: 60px; }
+        .wave-line:nth-child(4) { height: 80px; }
+        .wave-line:nth-child(5) { height: 100px; }
+        .wave-line:nth-child(6) { height: 115px; }
+        .wave-line:nth-child(7) { height: 125px; }
+        .wave-line:nth-child(8) { height: 115px; }
+        .wave-line:nth-child(9) { height: 100px; }
+        .wave-line:nth-child(10) { height: 80px; }
+        .wave-line:nth-child(11) { height: 60px; }
+        .wave-line:nth-child(12) { height: 40px; }
+        .wave-line:nth-child(13) { height: 25px; }
+
+        .audio-waves.listening .wave-line {
+            animation: waveAnimation 1s ease-in-out infinite;
+        }
+
+        .audio-waves.listening .wave-line:nth-child(1) { animation-delay: 0s; }
+        .audio-waves.listening .wave-line:nth-child(2) { animation-delay: 0.08s; }
+        .audio-waves.listening .wave-line:nth-child(3) { animation-delay: 0.16s; }
+        .audio-waves.listening .wave-line:nth-child(4) { animation-delay: 0.24s; }
+        .audio-waves.listening .wave-line:nth-child(5) { animation-delay: 0.32s; }
+        .audio-waves.listening .wave-line:nth-child(6) { animation-delay: 0.4s; }
+        .audio-waves.listening .wave-line:nth-child(7) { animation-delay: 0.48s; }
+        .audio-waves.listening .wave-line:nth-child(8) { animation-delay: 0.4s; }
+        .audio-waves.listening .wave-line:nth-child(9) { animation-delay: 0.32s; }
+        .audio-waves.listening .wave-line:nth-child(10) { animation-delay: 0.24s; }
+        .audio-waves.listening .wave-line:nth-child(11) { animation-delay: 0.16s; }
+        .audio-waves.listening .wave-line:nth-child(12) { animation-delay: 0.08s; }
+        .audio-waves.listening .wave-line:nth-child(13) { animation-delay: 0s; }
+
+        @keyframes waveAnimation {
+            0%, 100% {
+                height: 20px;
+                opacity: 0.5;
+                transform: scaleY(0.8);
+            }
+            50% {
+                height: 130px;
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        .voice-overlay-text {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .voice-overlay-transcript {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 20px;
+            font-weight: 500;
+            max-width: 700px;
+            text-align: center;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+
+        .voice-overlay-hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .voice-overlay-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .voice-overlay-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .dashboard-header {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .logo-text p {
+            font-size: 13px;
+            color: #64748b;
+            margin: 3px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        
+        .btn-icon i {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .btn-icon:hover {
+            background: #f8fafc;
+            border-color: #2563eb;
+            color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .balance-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .balance-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .balance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .balance-card.income::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .balance-card.expense::before {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+
+        .balance-card.total::before {
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+        }
+
+        .balance-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 0;
+        }
+
+        .balance-card.income .balance-amount {
+            color: #10b981;
+        }
+
+        .balance-card.expense .balance-amount {
+            color: #ef4444;
+        }
+
+        .balance-card.total .balance-amount {
+            color: #2563eb;
+        }
+
+        .balance-icon {
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            font-size: 32px;
+            opacity: 0.08;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .card-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: #2563eb;
+            font-size: 20px;
+        }
+
+        .ai-advice-box {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-advice-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(226, 232, 240, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .ai-advice-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .ai-icon {
+            width: 36px;
+            height: 36px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #64748b;
+        }
+
+        .ai-advice-header strong {
+            color: #1e293b;
+        }
+
+        .ai-advice-text {
+            font-size: 14px;
+            line-height: 1.6;
+            position: relative;
+            color: #475569;
+        }
+
+        .savings-section {
+            margin-top: 16px;
+            position: relative;
+        }
+
+        .savings-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        .savings-bar {
+            background: #f1f5f9;
+            border-radius: 50px;
+            height: 28px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .savings-fill {
+            height: 100%;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            transition: width 0.5s;
+            color: white;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .category-item:hover {
+            background: #e2e8f0;
+            transform: translateX(4px);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            color: #64748b;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .category-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ef4444;
+        }
+
+        .transactions-section {
+            grid-column: 1 / -1;
+        }
+
+        .transactions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 14px;
+            align-items: center;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .transaction-item:hover {
+            background: #e2e8f0;
+            transform: translateX(4px);
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            background: white;
+        }
+
+        .transaction-icon.income {
+            color: #10b981;
+        }
+
+        .transaction-icon.expense {
+            color: #ef4444;
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-desc {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .transaction-meta {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .transaction-amount {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .transaction-amount.income {
+            color: #10b981;
+        }
+
+        .transaction-amount.expense {
+            color: #ef4444;
+        }
+
+        .transaction-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: none;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .action-btn.edit:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .action-btn.delete:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .voice-assistant {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .voice-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            border: none;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+            color: white;
+            font-size: 28px;
+            cursor: default;
+            transition: all 0.2s;
+            position: relative;
+            pointer-events: none;
+        }
+
+        .voice-button.listening {
+            background: linear-gradient(135deg, #10b981, #059669);
+            animation: pulse-ring 1.5s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .voice-status {
+            position: absolute;
+            bottom: -36px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #1e293b;
+        }
+
+        .reports-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .reports-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(89, 88, 100, 0.3);
+            color: white;
+        }
+
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #e2e8f0;
+            padding: 20px 24px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .btn-custom {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-light-custom {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .btn-light-custom:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-header.bg-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        }
+
+        .period-btn {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+        }
+
+        .period-btn:hover {
+            background: #f8fafc;
+            border-color: #2563eb;
+            color: #2563eb;
+            transform: translateX(4px);
+        }
+
+        .period-btn i {
+            font-size: 18px;
+        }
+
+        .date-range-inputs {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .date-range-inputs.active {
+            display: block;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .balance-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .voice-assistant {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .voice-button {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .toast-container-custom {
+                left: 12px;
+                right: 12px;
+            }
+
+            .toast-custom {
+                min-width: auto;
+            }
+
+            .voice-overlay-text {
+                font-size: 22px;
+            }
+
+            .voice-overlay-transcript {
+                font-size: 18px;
+                max-width: 90%;
+            }
+
+            .audio-waves {
+                height: 100px;
+            }
+
+            .wave-line {
+                width: 4px;
+            }
+        }
+
+        #alertLevel.text-success {
+            color: #10b981 !important;
+        }
+
+        #alertLevel.text-warning {
+            color: #f59e0b !important;
+        }
+
+        #alertLevel.text-danger {
+            color: #ef4444 !important;
+        }
+
+        #alertLevel.text-secondary {
+            color: #6b7280 !important;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <div class="voice-overlay" id="voiceOverlay">
+        <button class="voice-overlay-close" onclick="closeOverlay()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        
+        <div class="voice-overlay-text" id="overlayTitle">Ti ascolto...</div>
+        
+        <div class="audio-waves listening" id="audioWaves">
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+            <div class="wave-line"></div>
+        </div>
+        
+        <div class="voice-overlay-transcript" id="overlayTranscript" style="display: none;">
+            Sto ascoltando...
+        </div>
+        
+        <div class="voice-overlay-hint">
+            Dì "stop", "basta" o "grazie" per terminare
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        
+        <div class="dashboard-header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>JarFin</h1>
+                    <p>Financial Intelligence Platform</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" onclick="showReportsModal()" title="Report Mensili">
+                    <i class="fa-solid fa-chart-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="balance-cards">
+            <div class="balance-card income">
+                <div class="balance-label">Entrate Totali</div>
+                <div class="balance-amount" id="totalIncome" th:text="${#numbers.formatDecimal(report.totalIncome, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00 €</div>
+                <div class="balance-icon">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </div>
+            </div>
+            <div class="balance-card expense">
+                <div class="balance-label">Uscite Totali</div>
+                <div class="balance-amount" id="totalExpense" th:text="${#numbers.formatDecimal(report.totalExpense, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00 €</div>
+                <div class="balance-icon">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+            </div>
+            <div class="balance-card total">
+                <div class="balance-label">Saldo Disponibile</div>
+                <div class="balance-amount" id="balance" th:text="${#numbers.formatDecimal(report.balance, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00 €</div>
+                <div class="balance-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            
+            <div class="card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">
+                        <i class="fa-solid fa-brain"></i>
+                        AI Financial Advisor
+                    </h3>
+                </div>
+                <div class="ai-advice-box">
+                    <div class="ai-advice-header">
+                        <div class="ai-icon">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <strong>Analisi Intelligente</strong>
+                        </div>
+                    </div>
+                    <p class="ai-advice-text" id="adviceText" th:text="${report.financialAdvice}">
+                        Analizzando i tuoi movimenti finanziari...
+                    </p>
+                    <div class="savings-section">
+                        <div class="savings-label">Tasso di Risparmio</div>
+                        <div class="savings-bar">
+                            <div class="savings-fill" id="savingsBar" 
+                                 th:classappend="${report.savingsRate < 0} ? 'bg-danger' : (${report.savingsRate < 20} ? 'bg-warning' : 'bg-success')"
+                                 th:style="'width: ' + ${report.savingsRate < 0 ? 100 : report.savingsRate} + '%'"
+                                 th:text="${#numbers.formatDecimal(report.savingsRate, 1, 'POINT', 1, 'COMMA')} + '%'">
+                                0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 text-center">
+                    <small class="text-muted">Status: </small><strong id="alertLevel" 
+                        class="fw-bold"
+                        th:text="${report.alertLevel}"
+                        th:classappend="${report.alertLevel == 'GREEN'} ? 'text-success' : (${report.alertLevel == 'YELLOW'} ? 'text-warning' : (${report.alertLevel == 'RED'} ? 'text-danger' : 'text-secondary'))">NORMAL</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">
+                        <i class="fa-solid fa-tags"></i>
+                        Spese per Categoria
+                    </h3>
+                </div>
+                <div class="category-list" id="categoryTimeline">
+                    <div th:each="entry : ${report.expenseByCategory}" class="category-item">
+                        <div class="category-info">
+                            <div class="category-icon-box" 
+                                 th:classappend="${entry.key == 'Ristorante' ? 'cat-restaurant' : 
+                                                   entry.key == 'Supermercato' ? 'cat-supermarket' : 
+                                                   entry.key == 'Trasporti' ? 'cat-transport' : 
+                                                   entry.key == 'Bollette' ? 'cat-bills' : 
+                                                   entry.key == 'Casa' ? 'cat-home' : 
+                                                   entry.key == 'Svago' ? 'cat-entertainment' : 
+                                                   entry.key == 'Shopping' ? 'cat-shopping' : 
+                                                   entry.key == 'Salute' or entry.key == 'Salute/Sport' ? 'cat-health' : 
+                                                   entry.key == 'Bar/Colazione' ? 'cat-coffee' : 
+                                                   entry.key == 'Cura Personale' ? 'cat-personal-care' : 
+                                                   'cat-other'}">
+                                
+                                <i th:if="${entry.key == 'Ristorante'}" class="fa-solid fa-utensils"></i>
+                                
+                                <i th:if="${entry.key == 'Supermercato'}" class="fa-solid fa-cart-shopping"></i>
+                                
+                                <i th:if="${entry.key == 'Trasporti'}" class="fa-solid fa-car"></i>
+                                
+                                <i th:if="${entry.key == 'Bollette'}" class="fa-solid fa-file-invoice-dollar"></i>
+                                
+                                <i th:if="${entry.key == 'Casa'}" class="fa-solid fa-house"></i>
+                                
+                                <i th:if="${entry.key == 'Svago'}" class="fa-solid fa-gamepad"></i>
+                                
+                                <i th:if="${entry.key == 'Shopping'}" class="fa-solid fa-bag-shopping"></i>
+                                
+                                <i th:if="${entry.key == 'Salute' or entry.key == 'Salute/Sport'}" class="fa-solid fa-heart-pulse"></i>
+                                
+                                <i th:if="${entry.key == 'Bar/Colazione'}" class="fa-solid fa-mug-hot"></i>
+                                
+                                <i th:if="${entry.key == 'Cura Personale'}" class="fa-solid fa-scissors"></i>
+                                
+                                <i th:if="${entry.key != 'Ristorante' and entry.key != 'Supermercato' and entry.key != 'Trasporti' and 
+                                           entry.key != 'Bollette' and entry.key != 'Casa' and entry.key != 'Svago' and 
+                                           entry.key != 'Shopping' and entry.key != 'Salute' and entry.key != 'Salute/Sport' and 
+                                           entry.key != 'Bar/Colazione' and entry.key != 'Cura Personale'}" 
+                                   class="fa-solid fa-circle"></i>
+                            </div>
+                            <span class="category-name" th:text="${entry.key}">Categoria</span>
+                        </div>
+                        <span class="category-amount" th:text="${#numbers.formatDecimal(entry.value, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00 €</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card transactions-section">
+            <div class="card-header-custom">
+                <h3 class="card-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Transazioni Recenti
+                </h3>
+                <a href="/transactions" class="reports-button">
+                    <i class="fa-solid fa-list"></i>
+                    Vedi Tutte
+                </a>
+            </div>
+            <div class="transactions-list">
+                
+                <div th:each="t, iterStat : ${transactions}" th:if="${iterStat.index < 5}" class="transaction-item">
+                    <div class="transaction-icon" th:classappend="${t.type == 'INCOME'} ? 'income' : 'expense'">
+                        <i th:class="${t.type == 'INCOME'} ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-down'"></i>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-desc" th:text="${t.description}">Descrizione</div>
+                        <div class="transaction-meta">
+                            <span th:text="${t.date}">Data</span> • 
+                            <span th:text="${t.category}">Categoria</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount" th:classappend="${t.type == 'INCOME'} ? 'income' : 'expense'">
+                        <span th:text="${t.type == 'INCOME' ? '+' : '-'}"></span>
+                        <span th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 2, 'COMMA')}">0,00</span> €
+                    </div>
+                    <div class="transaction-actions">
+                        <button class="action-btn edit" 
+                                th:onclick="openEditModal([[${t.id}]], [[${t.amount}]], [[${t.description}]], [[${t.category}]], [[${t.date}]], [[${t.type}]])"
+                                title="Modifica">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="action-btn delete" 
+                                th:onclick="openDeleteModal([[${t.id}]])"
+                                title="Elimina">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div th:if="${transactions == null or transactions.isEmpty()}" style="text-align: center; padding: 40px 20px; color: #94a3b8;">
+                    <i class="fa-solid fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                    <p style="font-size: 16px; font-weight: 500; margin: 0;">Nessuna transazione ancora</p>
+                    <p style="font-size: 14px; margin-top: 8px;">Usa l'assistente vocale per aggiungere la prima!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="voice-assistant">
+        <button class="voice-button" id="voiceButton">
+            <i class="fa-solid fa-microphone"></i>
+        </button>
+        <div class="voice-status" id="voiceStatus">In ascolto...</div>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="/update" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fa-solid fa-pen me-2"></i>Modifica Transazione</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalId" name="id">
+                        <div class="mb-3">
+                            <label class="form-label">Descrizione</label>
+                            <input type="text" class="form-control" id="modalDesc" name="description" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Importo (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="modalAmount" name="amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data</label>
+                            <input type="date" class="form-control" id="modalDate" name="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoria</label>
+                            <select class="form-select" id="modalCategory" name="category">
+                                <option value="Ristorante">Ristorante</option>
+                                <option value="Supermercato">Supermercato</option>
+                                <option value="Trasporti">Trasporti</option>
+                                <option value="Casa">Casa</option>
+                                <option value="Svago">Svago</option>
+                                <option value="Salute">Salute</option>
+                                <option value="Stipendio">Stipendio</option>
+                                <option value="Bonifico">Bonifico</option>
+                                <option value="Bollette">Bollette</option>
+                                <option value="Altro">Altro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-select" id="modalType" name="type">
+                                <option value="EXPENSE">Uscita</option>
+                                <option value="INCOME">Entrata</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-custom btn-custom" data-bs-dismiss="modal">Annulla</button>
+                        <button type="submit" class="btn btn-primary-custom btn-custom">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Salva
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Conferma Eliminazione</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questa transazione?</p>
+                    <p class="small text-muted">Questa operazione non può essere annullata.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-custom btn-custom" data-bs-dismiss="modal">Annulla</button>
+                    <a href="#" id="confirmDeleteBtn" class="btn btn-danger btn-custom">
+                        <i class="fa-solid fa-trash me-2"></i>Elimina
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reportsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-file-chart-line me-2"></i>Report Mensili</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-4">Seleziona il periodo per filtrare le transazioni:</p>
+                    <div class="d-grid gap-3">
+                        <button class="period-btn" onclick="applyPeriodFilter('current')">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            Mese Corrente
+                        </button>
+                        <button class="period-btn" onclick="applyPeriodFilter('last')">
+                            <i class="fa-solid fa-calendar-alt"></i>
+                            Mese Precedente
+                        </button>
+                        <button class="period-btn" onclick="toggleCustomRange()">
+                            <i class="fa-solid fa-calendar-week"></i>
+                            Periodo Personalizzato
+                        </button>
+
+                        <div class="date-range-inputs" id="customRangeInputs">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Inizio</label>
+                                    <input type="date" class="form-control" id="customDateFrom">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Fine</label>
+                                    <input type="date" class="form-control" id="customDateTo">
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary-custom btn-custom w-100" onclick="applyCustomFilter()">
+                                        <i class="fa-solid fa-filter me-2"></i>
+                                        Applica Filtro
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let recognition;
+        let isJarfinActivated = false;
+        let silenceTimer;
+        let reportsModalInstance;
+        let cooldownTimer;
+        let inCooldown = false;
+
+        const WAKE_WORDS = ["johnny", "jonny", "gionni", "gianni", "joni", "jarfin", "giammi", "gio", "jo", "ehi"];
+        const STOP_WORDS = ["stop", "basta", "grazie", "chiudi", "annulla", "niente", "a posto", "silenzio", "dormi"];
+
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast-custom ${type}`;
+            
+            const icons = {
+                success: 'fa-circle-check',
+                error: 'fa-circle-xmark',
+                info: 'fa-circle-info'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fa-solid ${icons[type] || icons.info}"></i>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function speak(text) {
+            return new Promise((resolve) => {
+
+                if (!window.speechSynthesis) {
+                    console.warn("SpeechSynthesis non disponibile");
+                    resolve();
+                    return;
+                }
+
+                try {
+                    window.speechSynthesis.cancel();
+                } catch(e) {
+                    console.warn("Errore cancel:", e);
+                }
+
+                setTimeout(() => {
+                    try {
+                        const utter = new SpeechSynthesisUtterance(text);
+                        utter.lang = 'it-IT';
+                        utter.rate = 1.0;
+                        utter.pitch = 1.0;
+                        utter.volume = 1.0;
+                        
+                        utter.onend = () => {
+                            console.log("Speech completato:", text);
+                            resolve();
+                        };
+                        utter.onerror = (e) => {
+
+                            if (e.error !== 'not-allowed') {
+                                console.error("Errore speech:", e.error);
+                            } else {
+                                console.warn("Speech non permesso dal browser (richiede interazione utente)");
+                            }
+                            resolve();
+                        };
+                        
+                        console.log("Avvio speech:", text);
+                        window.speechSynthesis.speak(utter);
+                    } catch(e) {
+                        console.error("Errore critico speech:", e);
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+        function initRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                showToast('Errore', 'Riconoscimento vocale non supportato. Usa Chrome o Edge.', 'error');
+                return;
+            }
+            
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "it-IT";
+
+            recognition.onstart = function() {
+                console.log("Riconoscimento vocale avviato in background");
+                updateVoiceStatus("In ascolto...");
+            };
+
+            recognition.onresult = (event) => {
+                let interim = "";
+                let final = "";
+                
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        final += event.results[i][0].transcript.toLowerCase();
+                    } else {
+                        interim += event.results[i][0].transcript.toLowerCase();
+                    }
+                }
+                
+                const transcript = (final + interim).trim();
+                
+                if (!isJarfinActivated) {
+
+                    if (WAKE_WORDS.some(word => transcript.includes(word))) {
+                        activateJohnny();
+                    }
+                } else {
+
+                    clearTimeout(silenceTimer);
+
+                    if (final.length > 0) {
+                        console.log("Testo finale rilevato:", final);
+
+                        silenceTimer = setTimeout(() => {
+                            if (transcript.length > 1) {
+                                processVoiceCommand(transcript);
+                            }
+                        }, 1500);
+                    } else if (interim.length > 0) {
+
+                        console.log("Parlando...");
+                    } else {
+
+                        console.log("Silenzio - timer 5s");
+                        silenceTimer = setTimeout(() => {
+                            console.log("Timeout 5s - chiusura");
+                            closeOverlay();
+                        }, 10000);
+                    }
+                }
+            };
+            
+            recognition.onend = () => {
+                console.log("Riavvio automatico del riconoscimento vocale");
+                setTimeout(() => {
+                    try { 
+                        recognition.start(); 
+                    } catch(e) {
+                        console.log("Errore nel riavvio:", e);
+                    }
+                }, 100);
+            };
+            
+            recognition.onerror = (event) => {
+                console.error("Errore riconoscimento vocale:", event.error);
+                
+                if (event.error === 'not-allowed') {
+                    showToast('Permesso negato', 'Abilita l\'accesso al microfono nelle impostazioni del browser', 'error');
+                    closeOverlay();
+                } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
+                    setTimeout(() => {
+                        try { recognition.start(); } catch(e) {}
+                    }, 1000);
+                }
+            };
+
+            try { 
+                recognition.start(); 
+                showToast('Johnny Attivo', 'Assistente vocale sempre in ascolto', 'success');
+            } catch(e) {
+                console.error("Errore avvio:", e);
+            }
+        }
+
+        async function activateJohnny() {
+            if(isJarfinActivated || inCooldown) return;
+            
+            isJarfinActivated = true;
+            document.getElementById('voiceButton').classList.add('listening');
+            document.getElementById('voiceOverlay').classList.add('active');
+            updateVoiceStatus("Parla ora...");
+
+            console.log("Johnny attivato - rispondo con voce");
+            speak("Sì?").then(() => {
+                console.log("Risposta vocale completata");
+            });
+
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(() => {
+                console.log("Timeout 5s dopo attivazione - chiusura overlay");
+                closeOverlay();
+            }, 10000);
+        }
+
+        function processVoiceCommand(text) {
+            console.log("Comando ricevuto:", text);
+
+            let cleanCmd = text;
+            WAKE_WORDS.forEach(word => { 
+                cleanCmd = cleanCmd.replace(new RegExp(word, 'gi'), ""); 
+            });
+            cleanCmd = cleanCmd.trim();
+            
+            console.log("Comando pulito:", cleanCmd);
+
+            if (STOP_WORDS.some(word => cleanCmd.toLowerCase().includes(word))) {
+                console.log("Rilevata stop word");
+                speak("Va bene");
+                closeOverlay();
+                return;
+            }
+
+            if (cleanCmd.length < 2) {
+                console.log("Comando troppo corto, chiudo senza rispondere");
+                closeOverlay();
+                return;
+            }
+            
+            console.log("Invio al backend:", cleanCmd);
+            sendToBackend(cleanCmd);
+        }
+
+        async function sendToBackend(text) {
+            try {
+                const response = await fetch('/api/voice/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(errText || "Errore Server");
+                }
+                
+                const data = await response.json();
+                
+                if(data.status === 'ignored') {
+                    closeOverlay();
+                    return;
+                }
+
+                await speak(data.message || "Fatto!");
+                
+                const message = `${data.amount || ""}€ • ${data.category || ""}`;
+                showToast('Operazione Completata', message, 'success');
+                updateDashboard();
+                closeOverlay();
+            } catch(err) {
+                console.error(err);
+                await speak("Mi dispiace, c'è stato un errore");
+                showToast('Errore', err.message, 'error');
+                closeOverlay();
+            }
+        }
+
+        function updateVoiceStatus(text) {
+            document.getElementById('voiceStatus').innerText = text;
+        }
+
+        function closeOverlay() {
+            isJarfinActivated = false;
+            lastTranscript = "";
+            clearTimeout(silenceTimer);
+            inCooldown = true;
+            clearTimeout(cooldownTimer);
+            cooldownTimer = setTimeout(() => {
+                inCooldown = false;
+                console.log("Cooldown terminato - posso riattivare");
+            }, 3000);
+            document.getElementById('voiceButton').classList.remove('listening');
+            document.getElementById('voiceOverlay').classList.remove('active');
+            document.getElementById('overlayTranscript').innerText = 'Sto ascoltando...';
+            updateVoiceStatus("In ascolto...");
+
+            console.log("Overlay chiuso - cooldown attivo per 3 secondi");
+        }
+
+        function updateDashboard() {
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        function openEditModal(id, amount, description, category, date, type) {
+            document.getElementById('modalId').value = id;
+            document.getElementById('modalAmount').value = amount;
+            document.getElementById('modalDesc').value = description;
+            document.getElementById('modalCategory').value = category;
+            document.getElementById('modalDate').value = date;
+            document.getElementById('modalType').value = type;
+            new bootstrap.Modal(document.getElementById('editModal')).show();
+        }
+
+        function openDeleteModal(id) {
+            document.getElementById('confirmDeleteBtn').href = '/delete/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        function showReportsModal() {
+            if (!reportsModalInstance) {
+                reportsModalInstance = new bootstrap.Modal(document.getElementById('reportsModal'));
+            }
+            reportsModalInstance.show();
+        }
+
+        function toggleCustomRange() {
+            const customInputs = document.getElementById('customRangeInputs');
+            customInputs.classList.toggle('active');
+        }
+
+        function applyPeriodFilter(period) {
+            const now = new Date();
+            let dateFrom, dateTo;
+            
+            if (period === 'current') {
+
+                dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+                dateTo = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            } else if (period === 'last') {
+
+                dateFrom = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                dateTo = new Date(now.getFullYear(), now.getMonth(), 0);
+            }
+            
+            const dateFromStr = dateFrom.toISOString().split('T')[0];
+            const dateToStr = dateTo.toISOString().split('T')[0];
+
+            window.location.href = `/transactions?dateFrom=${dateFromStr}&dateTo=${dateToStr}`;
+        }
+
+        function applyCustomFilter() {
+            const dateFrom = document.getElementById('customDateFrom').value;
+            const dateTo = document.getElementById('customDateTo').value;
+            
+            if (!dateFrom || !dateTo) {
+                showToast('Attenzione', 'Seleziona entrambe le date', 'error');
+                return;
+            }
+            
+            if (dateFrom > dateTo) {
+                showToast('Attenzione', 'La data di inizio deve essere precedente alla data di fine', 'error');
+                return;
+            }
+            
+            window.location.href = `/transactions?dateFrom=${dateFrom}&dateTo=${dateTo}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.body.addEventListener('click', function warmUpSpeech() {
+                if (window.speechSynthesis) {
+                    const utterance = new SpeechSynthesisUtterance('');
+                    utterance.volume = 0;
+                    window.speechSynthesis.speak(utterance);
+                    console.log("Sintesi vocale inizializzata");
+                }
+
+                document.body.removeEventListener('click', warmUpSpeech);
+            }, { once: true });
+            
+            setTimeout(() => {
+                initRecognition();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

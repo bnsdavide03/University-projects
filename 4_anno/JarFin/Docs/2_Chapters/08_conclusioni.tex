@@ -1,0 +1,85 @@
+\chapter{Conclusioni e Sviluppi Futuri}
+\label{chap:conclusioni}
+
+\section{Sintesi del Lavoro Svolto}
+
+Il presente lavoro di tesi ha avuto come oggetto la progettazione e lo sviluppo di \textbf{JarFin}, un assistente finanziario personale basato su un'architettura a microservizi.
+L'obiettivo primario era superare i limiti delle tradizionali applicazioni di gestione finanziaria (basate su form statici e interazioni manuali) introducendo un'interfaccia a linguaggio naturale (NLU) e un'architettura modulare e scalabile.
+
+Il progetto è stato condotto seguendo una metodologia iterativa e incrementale, suddivisa in tre fasi principali:
+\begin{enumerate}
+    \item \textbf{Iterazione 1 (Core \& Persistence)}: Sviluppo dell'\textit{Accounting Service}, garantendo la consistenza dei dati finanziari tramite PostgreSQL e transazioni ACID, e adottando pattern di progettazione robusti come DTO e Mapper.
+    \item \textbf{Iterazione 2 (Business Intelligence)}: Realizzazione dell'\textit{Analytics Service}, implementando algoritmi di aggregazione con complessità lineare $O(n)$ e logiche di proiezione temporale per fornire valore aggiunto ai dati grezzi.
+    \item \textbf{Iterazione 3 (Integration \& AI)}: Unificazione del sistema tramite \textit{API Gateway}, sviluppo della \textit{Web UI} e integrazione del motore \textit{NLU} deterministico per il riconoscimento dei comandi vocali con complessità $O(n)$.
+\end{enumerate}
+
+\newpage
+
+\section{Raggiungimento degli Obiettivi}
+
+L'analisi a consuntivo dimostra che gli obiettivi prefissati in fase di analisi (Capitolo 3) sono stati pienamente raggiunti.
+
+\begin{itemize}
+    \item \textbf{Architettura Disaccoppiata}: L'adozione di Spring Boot e Docker ha permesso di sviluppare servizi indipendenti, deployabili autonomamente e comunicanti via REST. Il Gateway ha risolto efficacemente le problematiche di routing e sicurezza (CORS).
+    \item \textbf{Interazione Naturale}: Il motore NLU, seppur basato su regole deterministiche, ha raggiunto un'accuratezza del 100\% sui pattern supportati, garantendo latenza zero ed esecuzione in tempo reale, un vantaggio significativo rispetto a soluzioni basate su LLM cloud-based.
+    \item \textbf{Scalabilità e Manutenibilità}: L'uso rigoroso della \textit{Clean Architecture}, la separazione in layer (Controller, Service, Repository) e l'adozione di DTO hanno prodotto una codebase testabile ed estendibile.
+\end{itemize}
+
+\section{Analisi Critica delle Scelte Tecniche}
+
+Durante lo sviluppo sono state prese decisioni architetturali che meritano una riflessione conclusiva.
+
+\subsection{Microservizi vs Monolite}
+Sebbene l'architettura a microservizi abbia introdotto una complessità infrastrutturale maggiore (gestione di porte multiple, configurazione del Gateway, comunicazione di rete), i benefici in termini di separazione delle responsabilità sono stati evidenti. L'\textit{Analytics Service} può evolvere i suoi algoritmi matematici senza rischiare di compromettere l'integrità del database dell'\textit{Accounting Service}.
+
+\subsection{NLU Deterministico vs Generativo}
+La scelta di implementare un parser NLU proprietario basato su Regex ($O(n)$) invece di integrare API di Intelligenza Artificiale Generativa (es. OpenAI) è stata vincente per il contesto del progetto. Ha permesso di mantenere il sistema:
+\begin{itemize}
+    \item \textbf{Veloce}: Nessuna latenza di rete verso server AI terzi.
+    \item \textbf{Economico}: Nessun costo per token/chiamata API.
+    \item \textbf{Privato}: I dati finanziari non lasciano mai l'infrastruttura dell'utente.
+\end{itemize}
+
+\section{Limitazioni dell'Attuale Implementazione}
+
+Nonostante il sistema JarFin abbia raggiunto gli obiettivi funzionali prefissati, l'attuale implementazione prototipale presenta alcune limitazioni intrinseche che ne restringono l'applicabilità in un contesto di produzione su larga scala.
+
+\subsection{Rigidità del Motore NLU}
+La scelta di un motore NLU deterministico basato su regole (\textit{Rule-Based}), sebbene eccellente per le performance, soffre del cosiddetto "Semantic Gap".
+Il sistema è in grado di interpretare solo frasi che seguono pattern sintattici prevedibili. Comandi che utilizzano sinonimi non mappati, slang dialettali o costruzioni frasali complesse (es. "Non ricordo se ho segnato la spesa di ieri") non vengono processati correttamente o richiedono un aggiornamento manuale del codice per essere supportati. Manca, di fatto, la capacità di generalizzazione tipica delle reti neurali.
+
+\subsection{Modelli Predittivi Elementari}
+L'algoritmo di proiezione finanziaria implementato nell'\textit{Analytics Service} si basa su un modello di estrapolazione lineare (media giornaliera moltiplicata per i giorni del mese).
+Questo approccio non tiene conto della stagionalità delle spese (es. le spese aumentano tipicamente nel weekend o durante le festività) né delle spese ricorrenti fisse (es. affitto o abbonamenti il primo del mese). Di conseguenza, le stime a inizio mese possono risultare poco accurate fino a quando non si accumula un volume sufficiente di transazioni.
+
+\subsection{Gestione della Sicurezza}
+Allo stato attuale, l'architettura delega la sicurezza alla segregazione di rete all'interno di Docker. Manca un layer di Autenticazione e Autorizzazione granulare (es. OAuth2/OIDC).
+Il sistema presuppone un ambiente \texttt{Single-User}: non esiste ancora un meccanismo per segregare i dati di più utenti (Multi-tenancy), rendendo impossibile, al momento, offrire JarFin come servizio SaaS (\textit{Software as a Service}) pubblico.
+
+\subsection{Persistenza dei Log e Monitoraggio}
+Sebbene i microservizi producano log applicativi, manca un'infrastruttura centralizzata per la loro aggregazione (come lo stack ELK - Elasticsearch, Logstash, Kibana). In caso di errore in produzione, il debug richiederebbe l'accesso manuale ai container, un'operazione non scalabile e rischiosa.
+
+\section{Sviluppi Futuri (Roadmap v2.0)}
+
+Il sistema JarFin, nella sua versione attuale, rappresenta un prototipo funzionale completo (MVP - Minimum Viable Product). \\
+Per un'eventuale messa in produzione, sono stati identificati i seguenti sviluppi futuri:
+
+\subsection{Sicurezza e Autenticazione (OAuth2)}
+Attualmente il sistema opera in un ambiente fidato. L'evoluzione naturale prevede l'integrazione di un server di identità (es. \textbf{Keycloak}) e l'implementazione del protocollo \textbf{OAuth2 / OIDC}.
+Il Gateway verificherebbe i token JWT (JSON Web Token) prima di inoltrare le richieste ai microservizi, garantendo che ogni utente acceda solo ai propri dati.
+
+\subsection{Evoluzione del Motore NLU}
+Per supportare frasi più complesse e meno strutturate, il motore regex potrebbe essere sostituito o affiancato da una libreria di NLP (Natural Language Processing) locale come \textbf{Stanford CoreNLP} o \textbf{Apache OpenNLP}, permettendo il riconoscimento delle entità (NER) tramite modelli probabilistici.
+
+\subsection{Digitalizzazione Scontrini tramite OCR}
+Un'importante funzionalità, attualmente già in fase di sviluppo, riguarda l'integrazione di un sistema di \textbf{Optical Character Recognition (OCR)} per la digitalizzazione automatica degli scontrini cartacei.
+L'obiettivo è permettere all'utente di caricare l'immagine di uno scontrino direttamente dalla Web UI; il sistema, mediante librerie di elaborazione immagini (es. Tesseract), estrarrà automaticamente i metadati essenziali (Data, Importo Totale ed Esercente) per popolare una nuova transazione.
+Questo modulo ridurrà drasticamente il \textit{data entry} manuale, rendendo l'inserimento delle spese fisiche immediato e meno soggetto a errori di trascrizione.
+
+\subsection{Container Orchestration (Kubernetes)}
+L'attuale configurazione \textit{Docker Compose} è ideale per lo sviluppo. In produzione, il passaggio a \textbf{Kubernetes} permetterebbe di scalare orizzontalmente i singoli servizi (es. avere 3 istanze dell'Analytics Service durante i picchi di carico di fine mese) e gestire la resilienza automatica (Self-healing).
+
+\section{Conclusione Personale}
+
+Lo sviluppo di JarFin ha rappresentato un'importante opportunità di crescita ingegneristica. Ha permesso di applicare concretamente concetti teorici avanzati quali i sistemi distribuiti, l'analisi algoritmica della complessità e i design pattern enterprise.
+Il risultato è un sistema software che non solo risolve un problema pratico (la gestione delle finanze), ma lo fa rispettando rigorosi standard di qualità, modularità ed efficienza.

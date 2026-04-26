@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: jarfin-api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Rotta 1: Accounting Service
+        - id: accounting-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/transactions/**
+
+        # Rotta 2: Analytics Service
+        - id: analytics-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/analytics/**
+
+        # Rotta 3: Frontend Web UI
+        - id: web-ui
+          uri: http://localhost:8083
+          predicates:
+            - Path=/**

@@ -1,0 +1,75 @@
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Metals (Scala / BSP)
+.metals/
+.bloop/
+
+# =========================
+# Build tools
+# =========================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+build/
+.gradle/
+
+# =========================
+# Java
+# =========================
+*.class
+*.log
+
+# =========================
+# Spring Boot
+# =========================
+*.jar
+*.war
+*.ear
+
+# =========================
+# Environment / Config
+# =========================
+.env
+.env.*
+application-local.yml
+application-local.properties
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+.metadata/
+
+.sonarlint/
