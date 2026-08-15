@@ -1,0 +1,39 @@
+# --- C++ Build & Binaries ---
+*.o
+*.out
+*.exe
+c3_simulator
+build/
+
+# --- Documentation ---
+*.toc
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+
+# --- Environment & Private Keys ---
+.env
+*.json
+!credentials.json.example 
+
+# --- Temporary & OS Files ---
+.tmp/
+.DS_Store
+Thumbs.db
+
+# --- IDE Specific ---
+.vscode/
+.idea/
+
+# --- Agent & SOPs ---
+agents.md
+
+# --- Python ---
+run_experiments.py
+**/run_experiments.py
+
+# --- Compiled Binaries ---
+simulator
+code/simulator
